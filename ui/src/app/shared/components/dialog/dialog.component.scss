@@ -1,0 +1,8 @@
+@use "../../../../styles/base/variables" as *;
+
+.confirm-dialog-wrapper {
+  mat-icon {
+    width: 20%;
+    height: 100%;
+  }
+}

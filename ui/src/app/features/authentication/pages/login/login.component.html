@@ -1,0 +1,73 @@
+<div
+  [id]="AUTH_ID.AUTH_LOGIN_PAGE"
+  class="authen-page-wrapper d-flex justify-content-center align-items-center"
+>
+  <div class="login-form-wrapper d-flex flex-column justify-content-center">
+    <div
+      class="login-form-header d-flex flex-column justify-content-center align-items-center mb-3"
+    >
+      <h2>{{ "shared.welcome" | translate }}</h2>
+      <span>{{ "shared.enterCredential" | translate }}</span>
+    </div>
+    <div class="mt-2">
+      <form
+        [formGroup]="loginForm"
+        (ngSubmit)="onSubmit(loginForm)"
+        [id]="AUTH_ID.AUTH_LOGIN_FORM"
+      >
+        <div>
+          <h5>
+            {{ "user.table.username" | translate }}
+            <span class="text-danger">*</span>
+          </h5>
+          <mat-form-field class="w-100 mb-3" appearance="outline">
+            <input matInput formControlName="username" />
+            @if (loginFormControl["username"].errors?.["required"]) {
+              <mat-error>
+                {{ "shared.error.usernameRequired" | translate }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div>
+          <h5>
+            {{ "user.table.password" | translate }}
+            <span class="text-danger">*</span>
+          </h5>
+          <mat-form-field class="w-100 mb-2" appearance="outline">
+            <input
+              matInput
+              type="password"
+              formControlName="password"
+              minlength="6"
+            />
+            @if (loginFormControl["password"].errors?.["required"]) {
+              <mat-error>
+                {{ "shared.error.passwordRequired" | translate }}
+              </mat-error>
+            }
+            @if (loginFormControl["password"].errors?.["minlength"]) {
+              <mat-error>
+                {{ "shared.error.passwordMinLength" | translate }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="d-flex justify-content-center align-items-center mt-3">
+          <button
+            mat-button
+            mat-raised-button
+            type="submit"
+            class="mb-3"
+            [ngClass]="loginForm.invalid ? 'btn-disabled' : 'btn-primary'"
+            [disabled]="loginForm.invalid"
+            [id]="AUTH_ID.BUTTON_LOGIN"
+          >
+            {{ "shared.login" | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

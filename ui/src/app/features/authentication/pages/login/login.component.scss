@@ -1,0 +1,41 @@
+@use "../../../../../styles/base/variables" as *;
+
+.authen-page-wrapper {
+  &#auth-loginPage {
+    background: #F8F3EA;
+    background: $bg-gradient;
+    width: 100vw;
+    height: 100vh;
+
+    .login-form-wrapper {
+      width: 480px;
+      background-color: #ffffff;
+      z-index: 2;
+      box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px,
+        rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
+      border-radius: 32px;
+      padding: 32px 24px;
+
+      .login-form-header {
+        h2 {
+          color: $black90;
+          margin-bottom: 0;
+        }
+        span {
+          color: $black60;
+        }
+      }
+
+      .mdc-button {
+        border-radius: 10px;
+        width: 100%;
+        height: 48px;
+        color: $daisy-white;
+        ::ng-deep span {
+          font-size: 18px !important;
+          font-weight: 600 !important;
+        }
+      }
+    }
+  }
+}

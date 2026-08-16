@@ -1,0 +1,52 @@
+@use "./variables" as *;
+
+.mat-mdc-table {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 10px !important;
+  box-shadow:
+    rgba(0, 0, 0, 0.2) 0px 12px 28px 0px,
+    rgba(0, 0, 0, 0.1) 0px 2px 4px 0px,
+    rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
+  border: 1px solid $black30;
+  .mat-mdc-header-row .mat-mdc-header-cell {
+    background-color: rgba(233, 236, 239, 0.7);
+    color: $black70;
+    font-weight: 600;
+    font-family: "Atlassian Sans";
+    font-size: 16px;
+    border: 1px solid $black30;
+  }
+  .mat-mdc-row {
+    &:hover {
+      background-color: $black20;
+    }
+  }
+  .mat-mdc-row .mat-mdc-cell {
+    font-size: 16px;
+    font-family: "Atlassian Sans";
+    border: 1px solid $black30;
+  }
+  &.no-data-table {
+    border-bottom-right-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+  }
+  .mat-column-select {
+    width: 50px;
+  }
+}
+
+.mat-mdc-paginator {
+  background-color: unset !important;
+  .mat-mdc-paginator-page-size-label,
+  .mat-mdc-paginator-range-label,
+  .mat-mdc-select-min-line {
+    font-size: 13px;
+    font-family: "Atlassian Sans";
+    color: $black80;
+  }
+  .mat-mdc-form-field-infix {
+    padding-top: 12px !important;
+    padding-bottom: 0 !important;
+  }
+}

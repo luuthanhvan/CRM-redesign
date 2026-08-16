@@ -1,0 +1,209 @@
+<div [id]="CONTACT_ID.CONTACT_DETAILS" class="row mx-4 my-3" *ngIf="contact">
+  <div class="col-12 mb-3">
+    <div class="breadcrumb d-flex gap-2 mb-0">
+      @for (page of NAVIGATION_PAGES; track page.route) {
+        <p
+          [class.pointer]="page.route"
+          [class.text-info]="page.route"
+          [class.text-grey]="!page.route"
+          [routerLink]="page.route"
+        >
+          {{ page.label }}
+        </p>
+        @if (page.route) {
+          <span class="text-grey"> > </span>
+        }
+      }
+    </div>
+    <h2 class="float-start text-primary">
+      {{ contact.contactName || ("shared.missingValue" | translate) }}
+    </h2>
+  </div>
+  <div [id]="CONTACT_ID.CONTACT_DETAILS_LIST">
+    <div class="col-12 mb-3">
+      <div class="row gap-2">
+        <div class="col card-tile">
+          <span class="card-tile-top">
+            {{ "contact.table.salutation" | translate }}
+          </span>
+          <span class="card-tile-bottom">
+            {{ contact.salutation || ("shared.missingValue" | translate) }}
+          </span>
+        </div>
+
+        <div class="col card-tile">
+          <span class="card-tile-top">
+            {{ "contact.table.dob" | translate }}
+          </span>
+          <span class="card-tile-bottom">
+            {{
+              (contact.dob | date: "mediumDate") ||
+                ("shared.missingValue" | translate)
+            }}
+          </span>
+        </div>
+
+        <div class="col card-tile">
+          <span class="card-tile-top">
+            {{ "contact.table.phone" | translate }}
+          </span>
+          <span class="card-tile-bottom">
+            {{ contact.mobilePhone || ("shared.missingValue" | translate) }}
+          </span>
+        </div>
+
+        <div class="col card-tile">
+          <span class="card-tile-top">
+            {{ "contact.table.email" | translate }}
+          </span>
+          <span class="card-tile-bottom">
+            {{ contact.email || ("shared.missingValue" | translate) }}
+          </span>
+        </div>
+
+        <div class="col card-tile">
+          <span class="card-tile-top">
+            {{ "contact.table.organization" | translate }}
+          </span>
+          <span class="card-tile-bottom">
+            {{ contact.organization || ("shared.missingValue" | translate) }}
+          </span>
+        </div>
+
+        <div class="col card-tile">
+          <span class="card-tile-top">
+            {{ "contact.table.leadSrc" | translate }}
+          </span>
+          <span class="card-tile-bottom">
+            {{ contact.leadSrc || ("shared.missingValue" | translate) }}
+          </span>
+        </div>
+
+        <div class="col card-tile">
+          <span class="card-tile-top">
+            {{ "contact.table.creator" | translate }}
+          </span>
+          <span class="card-tile-bottom">
+            {{ contact.creator || ("shared.missingValue" | translate) }}
+          </span>
+        </div>
+
+        <div class="col card-tile">
+          <span class="card-tile-top">
+            {{ "contact.table.assignedTo" | translate }}
+          </span>
+          <span class="card-tile-bottom">
+            {{ contact.assignedTo || ("shared.missingValue" | translate) }}
+          </span>
+        </div>
+
+        <div class="col card-tile">
+          <span class="card-tile-top">
+            {{ "contact.table.createdTime" | translate }}
+          </span>
+          <span class="card-tile-bottom">
+            {{
+              (contact.createdTime | date) ||
+                ("shared.missingValue" | translate)
+            }}
+          </span>
+        </div>
+
+        <div class="col card-tile">
+          <span class="card-tile-top">
+            {{ "contact.table.updatedTime" | translate }}
+          </span>
+          <span class="card-tile-bottom">
+            {{
+              (contact.updatedTime | date) ||
+                ("shared.missingValue" | translate)
+            }}
+          </span>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="col-12 mb-3">
+      <div class="row">
+        <div class="col-4 p-0">
+          <div class="card">
+            <div class="card-header">Contact details</div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <span class="list-item-left">
+                  {{ "contact.table.phone" | translate }}
+                </span>
+                <span class="list-item-right">
+                  {{
+                    contact?.mobilePhone || ("shared.missingValue" | translate)
+                  }}
+                </span>
+              </li>
+              <li class="list-group-item">
+                <span class="list-item-left">
+                  {{ "contact.table.email" | translate }}
+                </span>
+                <span class="list-item-right">
+                  {{ contact?.email || ("shared.missingValue" | translate) }}
+                </span>
+              </li>
+              <li class="list-group-item">
+                <span class="list-item-left">
+                  {{ "contact.table.organization" | translate }}
+                </span>
+                <span class="list-item-right">
+                  {{
+                    contact?.organization || ("shared.missingValue" | translate)
+                  }}
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-8">
+          <iframe
+            [src]="mapsURL | safe"
+            width="100%"
+            height="360px"
+            frameborder="0"
+            allowfullscreen
+            webkitallowfullscreen
+            mozallowfullscreen
+          >
+          </iframe>
+        </div>
+      </div>
+    </div> -->
+    <div class="col-12 mb-3">
+      <div class="row">
+        <div class="col-12 p-0">
+          <div class="card">
+            <div class="card-header">
+              {{ "contact.table.description" | translate }}
+            </div>
+            <p class="px-3 pt-3">
+              {{ contact.description || ("shared.missingValue" | translate) }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    @if (contact.mapsURL) {
+      <div class="col-12 mb-3">
+        <div class="row">
+          <div class="col-12 p-0">
+            <iframe
+              [src]="contact.mapsURL | safe"
+              width="100%"
+              height="360px"
+              frameborder="0"
+              allowfullscreen
+              webkitallowfullscreen
+              mozallowfullscreen
+            >
+            </iframe>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

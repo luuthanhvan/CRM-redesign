@@ -1,0 +1,28 @@
+<div class="confirm-dialog-wrapper">
+  <div mat-dialog-title class="d-flex justify-content-center">
+    <mat-icon svgIcon="spider-man"></mat-icon>
+  </div>
+  <mat-dialog-content class="d-flex flex-column align-items-center mb-2">
+    <h4 class="text-primary">{{ title }}</h4>
+    <p>{{ content }}</p>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end" class="d-flex justify-content-between">
+    <button
+      mat-button
+      (click)="onClose()"
+      [disableRipple]="true"
+      cdkFocusInitial
+      class="btn-secondary"
+    >
+      {{ cancelBtnLabel }}
+    </button>
+    <button
+      mat-button
+      (click)="onConfirm()"
+      [disableRipple]="true"
+      class="btn-danger"
+    >
+      {{ confirmBtnLabel }}
+    </button>
+  </mat-dialog-actions>
+</div>

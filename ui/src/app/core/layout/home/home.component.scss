@@ -1,0 +1,109 @@
+@use "../../../../styles/base/variables" as *;
+
+.navbar {
+  margin: 0;
+  padding: 0;
+  height: 48px;
+  background-color: $daisy-white;
+  border-bottom: 1px solid $black30;
+  .logo {
+    width: 250px;
+    height: 100%;
+    background-color: $daisy-white;
+    font-family: "Atlassian Sans";
+    border-right: 1px solid $black30;
+    .mat-icon {
+      width: 90px;
+      height: 90px;
+      ::ng-deep svg {
+        display: flex !important;
+      }
+    }
+  }
+}
+
+#app-home-sidenav-container {
+  &.mat-sidenav-container {
+    height: calc(100vh - 48px);
+    margin: 0 auto;
+    mat-sidenav {
+      width: 250px;
+      border: none;
+      border-radius: 0;
+      background-color: $daisy-white;
+      padding-top: 16px;
+      padding-bottom: 16px;
+      text-align: center;
+      border-right: 1px solid $black30;
+      .menu-button {
+        .mdc-button {
+          border-radius: 10px;
+          height: 48px;
+          width: 100%;
+          color: $black90;
+          ::ng-deep span {
+            font-size: 16px;
+            font-weight: 600;
+          }
+          fa-icon {
+            color: $black60;
+            font-size: 14px !important;
+          }
+          ::ng-deep &:hover {
+            background-color: $black20;
+            .mat-mdc-button-persistent-ripple::before {
+              background-color: transparent;
+            }
+            span,
+            fa-icon {
+              color: $primary !important;
+            }
+          }
+        }
+      }
+      .menu-sub-text {
+        color: $black50;
+        font-size: 14px;
+      }
+    }
+    mat-sidenav-content {
+      background-color: $daisy-white;
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      .content {
+        /* Force the content area to grow and fill all empty space */
+        flex: 1 0 auto;
+      }
+      .footer {
+        flex-shrink: 0;
+        padding-top: 16px;
+        text-align: center;
+        border-top: 1px solid $black30;
+      }
+    }
+  }
+}
+.menu-active {
+  background-color: rgba(203, 226, 239, 0.5) !important;
+  span,
+  fa-icon {
+    color: $primary !important;
+  }
+}
+.header-button {
+  margin-right: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  fa-icon {
+    color: $primary !important;
+    font-size: 18px;
+  }
+  ::ng-deep &:hover {
+    background-color: $black20;
+    .mat-mdc-button-persistent-ripple::before {
+      background-color: transparent;
+    }
+  }
+}

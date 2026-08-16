@@ -1,0 +1,199 @@
+<div class="row mx-4 my-3">
+  <div class="col-12">
+    <h2 class="float-start text-primary">
+      {{ "contact.title" | translate }}
+    </h2>
+  </div>
+  <div class="col-12 mb-3">
+    <div class="float-start search-field">
+      <mat-form-field appearance="outline" [id]="CONTACT_ID.INPUT_SEARCH">
+        <fa-icon
+          [icon]="icon.faMagnifyingGlass"
+          size="lg"
+          class="me-2"
+        ></fa-icon>
+        <input
+          matInput
+          placeholder="{{ 'contact.searchByContactName' | translate }}"
+          [formControl]="searchText"
+        />
+        <fa-icon
+          [icon]="icon.faXmark"
+          size="lg"
+          class="me-2 pointer"
+          [matTooltip]="
+            searchText.value !== '' ? ('shared.clear' | translate) : ''
+          "
+          [class.active]="searchText.value !== ''"
+          (click)="resetData()"
+        ></fa-icon>
+      </mat-form-field>
+    </div>
+    <div
+      class="float-end d-flex align-items-center gap-2"
+      *ngIf="currentUserInfo && currentUserInfo['isAdmin']"
+    >
+      <button
+        mat-button
+        [disableRipple]="true"
+        class="btn-primary"
+        (click)="openFormDialog('add')"
+        [id]="CONTACT_ID.BUTTON_CREATE"
+      >
+        <fa-icon [icon]="icon.faPlus" size="lg" class="me-2"></fa-icon>
+        <span>{{ "contact.createNewContact" | translate }}</span>
+      </button>
+      <button
+        mat-button
+        [disableRipple]="true"
+        [disabled]="contactIdsChecked.length === 0"
+        [ngClass]="
+          contactIdsChecked.length === 0 ? 'btn-disabled' : 'btn-danger'
+        "
+        (click)="contactIdsChecked.length !== 0 && onBulkDeleteContacts()"
+        [id]="
+          contactIdsChecked.length === 0
+            ? CONTACT_ID.BUTTON_DELETE_DISABLED
+            : CONTACT_ID.BUTTON_DELETE_ENABLED
+        "
+      >
+        <fa-icon [icon]="icon.faTrashCan" size="lg" class="me-2"></fa-icon>
+        <span>
+          {{ "contact.deleteContact" | translate }}
+        </span>
+      </button>
+    </div>
+  </div>
+  <div class="col-12 contacts-list mb-3">
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      class="mat-elevation-z8"
+      [class.no-data-table]="totalRecords === 0"
+      [id]="CONTACT_ID.CONTACT_LIST"
+    >
+      <ng-container
+        matColumnDef="select"
+        *ngIf="currentUserInfo && currentUserInfo['isAdmin']"
+      >
+        <th mat-header-cell *matHeaderCellDef class="text-center"></th>
+        <td class="text-center" mat-cell *matCellDef="let element">
+          <input
+            type="checkbox"
+            [value]="element._id"
+            (change)="onCheckboxChecked($event)"
+          />
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="contactName">
+        <th mat-header-cell *matHeaderCellDef class="text-center">
+          {{ "contact.table.contactName" | translate }}
+        </th>
+        <td
+          class="text-center pointer"
+          mat-cell
+          *matCellDef="let element"
+          routerLink="/contact/contact-details"
+        >
+          {{ element.contactName }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="salutation">
+        <th mat-header-cell *matHeaderCellDef class="text-center">
+          {{ "contact.table.salutation" | translate }}
+        </th>
+        <td class="text-center" mat-cell *matCellDef="let element">
+          {{ element.salutation }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="organization">
+        <th mat-header-cell *matHeaderCellDef class="text-center">
+          {{ "contact.table.organization" | translate }}
+        </th>
+        <td class="text-center" mat-cell *matCellDef="let element">
+          {{ element.organization }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="leadSrc">
+        <th mat-header-cell *matHeaderCellDef class="text-center">
+          {{ "contact.table.leadSrc" | translate }}
+        </th>
+        <td class="text-center" mat-cell *matCellDef="let element">
+          {{ element.leadSrc }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="phone">
+        <th mat-header-cell *matHeaderCellDef class="text-center">
+          {{ "contact.table.phone" | translate }}
+        </th>
+        <td class="text-center" mat-cell *matCellDef="let element">
+          {{ element.mobilePhone }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef class="text-center">
+          {{ "contact.table.email" | translate }}
+        </th>
+        <td class="text-center" mat-cell *matCellDef="let element">
+          {{ element.email }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="assignedTo">
+        <th mat-header-cell *matHeaderCellDef class="text-center">
+          {{ "contact.table.assignedTo" | translate }}
+        </th>
+        <td class="text-center" mat-cell *matCellDef="let element">
+          {{ element.assignedTo }}
+        </td>
+      </ng-container>
+
+      <ng-container
+        matColumnDef="actions"
+        *ngIf="currentUserInfo && currentUserInfo['isAdmin']"
+      >
+        <th mat-header-cell *matHeaderCellDef class="text-center">
+          {{ "shared.actions" | translate }}
+        </th>
+        <td class="text-center" mat-cell *matCellDef="let element">
+          <fa-icon
+            [icon]="icon.faPencil"
+            size="lg"
+            class="text-warning pointer mx-1"
+            [matTooltip]="'shared.edit' | translate"
+            (click)="openFormDialog('edit', element._id)"
+          ></fa-icon>
+          <fa-icon
+            [icon]="icon.faTrashCan"
+            size="lg"
+            class="text-danger pointer mx-1"
+            [matTooltip]="'shared.delete' | translate"
+            (click)="onDelete(element._id, element.contactName)"
+          ></fa-icon>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <app-no-data-found
+      *ngIf="totalRecords === 0"
+      [panelId]="CONTACT_ID.CONTACT_LIST_NOT_FOUND"
+    ></app-no-data-found>
+  </div>
+  <div [hidden]="totalRecords === 0">
+    <mat-paginator
+      [id]="CONTACT_ID.CONTACT_LIST_PAGINATION"
+      #contactPaginator
+      [length]="totalRecords"
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 20, 30, 40, 50]"
+    ></mat-paginator>
+  </div>
+</div>

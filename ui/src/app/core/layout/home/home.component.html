@@ -1,0 +1,134 @@
+<app-progress-spinner></app-progress-spinner>
+
+<!-- Navigation bar -->
+<mat-toolbar class="navbar">
+  <div class="logo d-flex align-items-center justify-content-center">
+    <mat-icon svgIcon="crm-2"></mat-icon>
+  </div>
+  <div>
+    <div
+      mat-button
+      [matMenuTriggerFor]="menu"
+      [id]="HOME_ID.BUTTON_MENU"
+      class="header-button pointer d-flex align-items-center justify-content-center"
+    >
+      <fa-icon [icon]="icon.faGear" size="lg"></fa-icon>
+    </div>
+    <mat-menu #menu="matMenu">
+      <button
+        mat-menu-item
+        [matMenuTriggerFor]="language"
+        [id]="HOME_ID.BUTTON_LANGUAGE"
+      >
+        {{ "shared.language" | translate }}
+      </button>
+      <button
+        mat-menu-item
+        (click)="openChangePwdDialog()"
+        [id]="HOME_ID.BUTTON_CHANGE_PASSWORD"
+      >
+        {{ "shared.changePassword" | translate }}
+      </button>
+      <button mat-menu-item (click)="signout()" [id]="HOME_ID.BUTTON_SIGN_OUT">
+        {{ "shared.signout" | translate }}
+      </button>
+    </mat-menu>
+    <mat-menu #language="matMenu">
+      <div *ngFor="let language of translate.getLangs()">
+        <button
+          mat-menu-item
+          (click)="switchLanguage(language)"
+          [id]="HOME_ID.BUTTON_SWITCH_LANGUAGE"
+        >
+          {{ language }}
+        </button>
+      </div>
+    </mat-menu>
+  </div>
+</mat-toolbar>
+
+<!-- Left sidebar menu -->
+<mat-sidenav-container id="app-home-sidenav-container">
+  <mat-sidenav mode="side" opened="true">
+    <div class="menu-sub-text">MENU</div>
+    <div class="menu-button mx-auto px-2">
+      <button
+        *ngIf="isAdminUser"
+        mat-button
+        [id]="HOME_ID.MENU_DASHBOARD"
+        class="py-1 ps-2 my-1 d-flex justify-content-start"
+        routerLink="/dashboard"
+        routerLinkActive="active"
+        [class.menu-active]="isRouteActive('dashboard')"
+      >
+        <fa-icon [icon]="icon.faGauge" size="lg" class="me-1"></fa-icon>
+        <span>
+          {{ "dashboard.title" | translate }}
+        </span>
+      </button>
+      <button
+        mat-button
+        [id]="HOME_ID.MENU_CONTACTS"
+        class="py-1 ps-2 my-1 d-flex justify-content-start"
+        routerLink="/contact"
+        routerLinkActive="active"
+        [class.menu-active]="isRouteActive('contact')"
+      >
+        <fa-icon [icon]="icon.faAddressBook" size="lg" class="me-1"></fa-icon>
+        <span>
+          {{ "contact.title" | translate }}
+        </span>
+      </button>
+      <button
+        mat-button
+        [id]="HOME_ID.MENU_SALES_ORDERS"
+        class="py-1 ps-2 my-1 d-flex justify-content-start"
+        routerLink="/sales-order"
+        routerLinkActive="active"
+        [class.menu-active]="isRouteActive('sales-order')"
+      >
+        <fa-icon [icon]="icon.faCreditCard" size="lg" class="me-1"></fa-icon>
+        <span>
+          {{ "salesOrder.title" | translate }}
+        </span>
+      </button>
+
+      <button
+        *ngIf="isAdminUser"
+        mat-button
+        [id]="HOME_ID.MENU_USERS"
+        class="py-1 ps-2 my-1 d-flex justify-content-start"
+        routerLink="/user"
+        routerLinkActive="active"
+        [class.menu-active]="isRouteActive('user')"
+      >
+        <fa-icon [icon]="icon.faUsers" size="lg" class="me-1"></fa-icon>
+        <span>
+          {{ "user.title" | translate }}
+        </span>
+      </button>
+
+      <!-- <button
+        *ngIf="isAdminUser"
+        mat-button
+        class="py-1 ps-4 my-1 d-flex justify-content-start"
+        routerLink="/task"
+        routerLinkActive="active"
+        [class.menu-active]="isRouteActive('task')"
+      >
+        <fa-icon [icon]="icon.faListCheck" size="lg" class="me-2"></fa-icon>
+        <span> Task </span>
+      </button> -->
+    </div>
+  </mat-sidenav>
+
+  <!-- main content -->
+  <mat-sidenav-content>
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+    <footer class="footer">
+      <p>© 2026 Van Luu</p>
+    </footer>
+  </mat-sidenav-content>
+</mat-sidenav-container>
