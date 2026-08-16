@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
@@ -11,6 +11,7 @@ import { SafePipe } from '~core/pipes/safe.pipe';
 
 import { CONTACT_ID } from '~features/contact/contact.constant';
 import { Contact } from '~features/contact/contact.interface';
+import { ContactApi } from '~features/contact/contact.api';
 import { ContactService } from '~features/contact/contact.service';
 
 @Component({
@@ -27,7 +28,10 @@ import { ContactService } from '~features/contact/contact.service';
   styleUrl: './contact-details.component.scss',
 })
 export class ContactDetailsComponent implements OnInit {
-  private contactService = inject(ContactService);
+  private router = inject(Router);
+  private contactApi = inject(ContactApi);
+  public contactService = inject(ContactService);
+
   CONTACT_ID = CONTACT_ID;
   contact!: Contact;
   NAVIGATION_PAGES = [
@@ -40,10 +44,16 @@ export class ContactDetailsComponent implements OnInit {
       label: 'Contact Details',
     },
   ];
+  routeStateData: { [k: string]: any } | undefined;
+
+  constructor() {
+    const currentNav = this.router.getCurrentNavigation();
+    this.routeStateData = currentNav?.extras.state;
+  }
 
   ngOnInit(): void {
-    this.contactService
-      .getContact('6a80812e1547609e6a2e30bf')
+    this.contactApi
+      .getContact(this.routeStateData?.['contactId'])
       .subscribe((contact) => {
         if (contact) {
           this.contact = {

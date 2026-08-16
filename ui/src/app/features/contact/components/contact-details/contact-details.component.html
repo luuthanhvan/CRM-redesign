@@ -21,8 +21,8 @@
   </div>
   <div [id]="CONTACT_ID.CONTACT_DETAILS_LIST">
     <div class="col-12 mb-3">
-      <div class="row gap-2">
-        <div class="col card-tile">
+      <div class="d-flex justify-content-start gap-2">
+        <div class="card-tile purple">
           <span class="card-tile-top">
             {{ "contact.table.salutation" | translate }}
           </span>
@@ -31,7 +31,7 @@
           </span>
         </div>
 
-        <div class="col card-tile">
+        <div class="card-tile orange">
           <span class="card-tile-top">
             {{ "contact.table.dob" | translate }}
           </span>
@@ -43,7 +43,7 @@
           </span>
         </div>
 
-        <div class="col card-tile">
+        <div class="card-tile maroon">
           <span class="card-tile-top">
             {{ "contact.table.phone" | translate }}
           </span>
@@ -52,7 +52,7 @@
           </span>
         </div>
 
-        <div class="col card-tile">
+        <div class="card-tile blue">
           <span class="card-tile-top">
             {{ "contact.table.email" | translate }}
           </span>
@@ -61,7 +61,7 @@
           </span>
         </div>
 
-        <div class="col card-tile">
+        <div class="card-tile teal">
           <span class="card-tile-top">
             {{ "contact.table.organization" | translate }}
           </span>
@@ -70,16 +70,25 @@
           </span>
         </div>
 
-        <div class="col card-tile">
+        <div class="card-tile">
           <span class="card-tile-top">
             {{ "contact.table.leadSrc" | translate }}
           </span>
           <span class="card-tile-bottom">
-            {{ contact.leadSrc || ("shared.missingValue" | translate) }}
+            @if (contact.leadSrc) {
+              <div
+                class="badge rounded-pill"
+                [ngClass]="contactService.getLeadSrcBadgeColor(contact.leadSrc)"
+              >
+                <span>{{ contact.leadSrc }}</span>
+              </div>
+            } @else {
+              {{ "shared.missingValue" | translate }}
+            }
           </span>
         </div>
 
-        <div class="col card-tile">
+        <div class="card-tile green">
           <span class="card-tile-top">
             {{ "contact.table.creator" | translate }}
           </span>
@@ -88,7 +97,7 @@
           </span>
         </div>
 
-        <div class="col card-tile">
+        <div class="card-tile pink">
           <span class="card-tile-top">
             {{ "contact.table.assignedTo" | translate }}
           </span>
@@ -97,7 +106,7 @@
           </span>
         </div>
 
-        <div class="col card-tile">
+        <div class="card-tile navy">
           <span class="card-tile-top">
             {{ "contact.table.createdTime" | translate }}
           </span>
@@ -109,7 +118,7 @@
           </span>
         </div>
 
-        <div class="col card-tile">
+        <div class="card-tile sage">
           <span class="card-tile-top">
             {{ "contact.table.updatedTime" | translate }}
           </span>

@@ -9,7 +9,7 @@ import { ChartOptions } from 'chart.js';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { DASHBOARD_ID } from '~features/dashboard/dashboard.constant';
-import { ContactService } from '~features/contact/contact.service';
+import { ContactApi } from '~features/contact/contact.api';
 import { SalesOrderService } from '~features/sales-order/sales-order.service';
 
 @Component({
@@ -21,7 +21,7 @@ import { SalesOrderService } from '~features/sales-order/sales-order.service';
 export class DashboardComponent implements OnInit {
   @ViewChild(BaseChartDirective) contactChart!: BaseChartDirective;
   @ViewChild(BaseChartDirective) salesOrderChart!: BaseChartDirective;
-  contactService = inject(ContactService);
+  contactApi = inject(ContactApi);
   salesOrderService = inject(SalesOrderService);
 
   DASHBOARD_ID = DASHBOARD_ID;
@@ -65,7 +65,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadContactChartData() {
-    this.contactService.countContacts('lead-source').subscribe((data) => {
+    this.contactApi.countContacts('lead-source').subscribe((data) => {
       if (data) {
         this.contactPieChartDatasets = [...this.contactPieChartDatasets];
         data.forEach((item: { [key: string]: any }) => {

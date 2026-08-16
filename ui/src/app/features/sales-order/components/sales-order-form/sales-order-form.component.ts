@@ -30,7 +30,7 @@ import { ToastService } from '~shared/services/toast.service';
 import { CommonValidator } from '~core/validators/common.validator';
 
 import { Contact } from '~features/contact/contact.interface';
-import { ContactService } from '~features/contact/contact.service';
+import { ContactApi } from '~features/contact/contact.api';
 import { SALES_ORDER_ID } from '~features/sales-order/sales-order.constant';
 import { SalesOrder } from '~features/sales-order/sales-order.interface';
 import { SalesOrderService } from '~features/sales-order/sales-order.service';
@@ -60,7 +60,7 @@ export class SalesOrderFormComponent implements OnInit {
   readonly dialogRef = inject(MatDialogRef<SalesOrderFormComponent>);
   private formBuilder = inject(FormBuilder);
   private toastService = inject(ToastService);
-  private contactService = inject(ContactService);
+  private contactApi = inject(ContactApi);
   private userService = inject(UserService);
   private salesOrderService = inject(SalesOrderService);
 
@@ -89,7 +89,7 @@ export class SalesOrderFormComponent implements OnInit {
       description: new FormControl(''),
     });
 
-    this.contactService.getListOfContactNames().subscribe((data) => {
+    this.contactApi.getListOfContactNames().subscribe((data) => {
       if (data) {
         this.contacts = data;
       }
@@ -114,16 +114,16 @@ export class SalesOrderFormComponent implements OnInit {
 
   setFormData(data: SalesOrder) {
     this.salesOrderForm.controls['contactName'].setValue(
-      data['contactName'] || ''
+      data['contactName'] || '',
     );
     this.salesOrderForm.controls['subject'].setValue(data['subject'] || '');
     this.salesOrderForm.controls['status'].setValue(data['status'] || '');
     this.salesOrderForm.controls['total'].setValue(data['total'] || '');
     this.salesOrderForm.controls['assignedTo'].setValue(
-      data['assignedTo'] || ''
+      data['assignedTo'] || '',
     );
     this.salesOrderForm.controls['description'].setValue(
-      data['description'] || ''
+      data['description'] || '',
     );
     this.createdTime = data['createdTime'] || new Date();
   }
@@ -148,11 +148,11 @@ export class SalesOrderFormComponent implements OnInit {
             if (response.isSuccess()) {
               this.toastService.showSuccessMessage(
                 'Add new Sales order!',
-                this.SALES_ORDER_ID.TOAST_ADD_SUCCESS
+                this.SALES_ORDER_ID.TOAST_ADD_SUCCESS,
               );
               this.dialogRef.close();
             }
-          })
+          }),
         )
         .subscribe();
     } else {
@@ -163,11 +163,11 @@ export class SalesOrderFormComponent implements OnInit {
             if (response.isSuccess()) {
               this.toastService.showSuccessMessage(
                 'Update the Sales order!',
-                this.SALES_ORDER_ID.TOAST_UPDATE_SUCCESS
+                this.SALES_ORDER_ID.TOAST_UPDATE_SUCCESS,
               );
               this.dialogRef.close();
             }
-          })
+          }),
         )
         .subscribe();
     }

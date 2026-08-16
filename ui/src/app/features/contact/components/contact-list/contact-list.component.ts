@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { BehaviorSubject, Observable, combineLatest, of } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, combineLatest, of } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -19,7 +19,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSelectModule } from '@angular/material/select';
+import { MatSelectModule, MatSelectChange } from '@angular/material/select';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
@@ -38,9 +38,10 @@ import { DialogComponent } from '~shared/components/dialog/dialog.component';
 import { NoDataFoundComponent } from '~shared/components/no-data-found/no-data-found.component';
 import { ToastService } from '~shared/services/toast.service';
 
-import { ContactFormComponent } from '~features/contact/components/contact-form/contact-form.component';
 import { CONTACT_ID } from '~features/contact/contact.constant';
-import { Contact, FilterCriteria } from '~features/contact/contact.interface';
+import { Contact } from '~features/contact/contact.interface';
+import { ContactApi } from '~features/contact/contact.api';
+import { ContactFormComponent } from '~features/contact/components/contact-form/contact-form.component';
 import { ContactService } from '~features/contact/contact.service';
 
 @Component({
@@ -61,7 +62,6 @@ import { ContactService } from '~features/contact/contact.service';
     MatTooltipModule,
     NoDataFoundComponent,
     ReactiveFormsModule,
-    RouterLink,
     TranslateModule,
   ],
   providers: [MatDatepickerModule, MatNativeDateModule],
@@ -70,6 +70,13 @@ import { ContactService } from '~features/contact/contact.service';
 })
 export class ContactListComponent implements OnInit {
   @ViewChild(MatPaginator) contactPaginator!: MatPaginator;
+  private contactApi = inject(ContactApi);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private toastService = inject(ToastService);
+  public dialog = inject(MatDialog);
+  public contactService = inject(ContactService);
+
   CONTACT_ID = CONTACT_ID;
   displayedColumns: string[] = [
     'contactName',
@@ -79,14 +86,6 @@ export class ContactListComponent implements OnInit {
     'phone',
     'email',
     'assignedTo',
-  ];
-  leadSources: string[] = [
-    'Existing Customer',
-    'Partner',
-    'Conference',
-    'Website',
-    'Word of mouth',
-    'Other',
   ];
   icon = {
     faMagnifyingGlass,
@@ -98,42 +97,33 @@ export class ContactListComponent implements OnInit {
   dataSource = new MatTableDataSource<Contact>([]);
   totalRecords: number = 0;
   contactIdsChecked: string[] = [];
+  leadSourceList: string[] = [];
   searchText: FormControl = new FormControl('');
+  leadSource: FormControl = new FormControl('');
   search$!: Observable<Contact[] | undefined>;
-  filterSubject: BehaviorSubject<FilterCriteria> =
-    new BehaviorSubject<FilterCriteria>({});
   currentUserInfo: Record<string, any>;
 
-  constructor(
-    private router: Router,
-    protected contactService: ContactService,
-    public dialog: MatDialog,
-    private route: ActivatedRoute,
-    private toastService: ToastService,
-  ) {
+  constructor() {
     const currentUserInfo = window.localStorage.getItem('currentUser');
     this.currentUserInfo = currentUserInfo && JSON.parse(currentUserInfo);
     if (this.currentUserInfo && this.currentUserInfo['isAdmin']) {
       this.displayedColumns = ['select', ...this.displayedColumns, 'actions'];
     }
-    // clear params (leadSrc or assignedTo) before get all data
-    this.router.navigateByUrl('/contact', { skipLocationChange: false });
+    // clear params (leadSrc) before get all data
+    // this.router.navigateByUrl('/contact', { skipLocationChange: false });
     // get lead source passed from dashboard page
-    this.route.queryParams.subscribe((params) => {
-      if (params) {
-        if (params['leadSrc']) {
-          // this.leadSrcFromDashboard = params['leadSrc'];
-          // this.leadSrc = new FormControl(this.leadSrcFromDashboard);
-        }
-        if (params['assignedTo']) {
-          // this.assignedFromDashboard = params['assignedTo'];
-          // this.assignedTo = new FormControl(this.assignedFromDashboard);
-        }
-      }
-    });
+    // this.route.queryParams.subscribe((params) => {
+    //   if (params) {
+    //     if (params['leadSrc']) {
+    //       this.leadSrcFromDashboard = params['leadSrc'];
+    //       this.leadSrc = new FormControl(this.leadSrcFromDashboard);
+    //     }
+    //   }
+    // });
   }
 
   ngOnInit(): void {
+    this.leadSourceList = this.contactService.getLeadSrc();
     this.loadData();
   }
 
@@ -147,32 +137,35 @@ export class ContactListComponent implements OnInit {
       distinctUntilChanged(),
       switchMap((contactName) =>
         contactName
-          ? this.contactService.searchContacts({
+          ? this.contactApi.searchContacts({
               contactName,
             })
           : of(undefined),
       ),
     );
 
-    combineLatest([this.contactService.getListOfContacts(), this.search$])
+    combineLatest([this.contactApi.getListOfContacts(), this.search$])
       .pipe(
         map(([contacts, searchResult]) => {
           const sourceData = searchResult || contacts;
           return sourceData;
         }),
       )
-      .subscribe((data) => {
-        if (data) {
-          this.totalRecords = data.length;
-          this.dataSource = new MatTableDataSource(data);
-          this.dataSource.paginator = this.contactPaginator;
+      .subscribe((contactData) => {
+        if (contactData) {
+          this.setTableData(contactData);
         }
       });
   }
 
+  setTableData(data: Contact[]) {
+    this.totalRecords = data.length;
+    this.dataSource = new MatTableDataSource(data);
+    this.dataSource.paginator = this.contactPaginator;
+  }
+
   resetData() {
     if (this.searchText.value !== '') {
-      this.filterSubject.next({});
       this.searchText = new FormControl('');
       this.loadData();
     }
@@ -194,7 +187,7 @@ export class ContactListComponent implements OnInit {
     });
   }
 
-  onDelete(contactId: string, contactName: string) {
+  onDelete(contactId: string) {
     const confirmDialogRef = this.dialog.open(DialogComponent, {
       disableClose: false,
       width: '600px',
@@ -202,7 +195,7 @@ export class ContactListComponent implements OnInit {
     confirmDialogRef.componentInstance.sendingSubmitSignal.subscribe(
       (signal) => {
         if (signal) {
-          this.contactService
+          this.contactApi
             .deleteContact(contactId)
             .pipe(
               tap((response) => {
@@ -237,7 +230,7 @@ export class ContactListComponent implements OnInit {
     confirmDialogRef.componentInstance.sendingSubmitSignal.subscribe(
       (signal) => {
         if (signal) {
-          this.contactService
+          this.contactApi
             .bulkDeleteContacts(this.contactIdsChecked)
             .pipe(
               tap((response) => {
@@ -281,8 +274,22 @@ export class ContactListComponent implements OnInit {
     }
   }
 
-  applySelectFilter(filterValue: string, filterBy: string) {
-    const currentFilterObj = this.filterSubject.getValue();
-    this.filterSubject.next({ ...currentFilterObj, [filterBy]: filterValue });
+  onLeadSrcChange(event: MatSelectChange) {
+    this.contactApi
+      .searchContacts({
+        contactName: this.searchText.value,
+        leadSource: event.value.toString(),
+      })
+      .subscribe((contactData) => {
+        if (contactData) {
+          this.setTableData(contactData);
+        }
+      });
+  }
+
+  navigateToSubScreen(screen: string, data: {}) {
+    this.router.navigate([screen], {
+      state: data,
+    });
   }
 }

@@ -18,7 +18,7 @@
   width: fit-content;
   max-width: fit-content;
   padding: 6px 12px;
-  border-radius: 10px;
+  border-radius: 16px;
   background-color: $black20;
   display: flex;
   flex-direction: column;
@@ -29,8 +29,69 @@
     color: $black60 !important;
   }
   .card-tile-bottom {
-    font-size: 16px !important;
     color: $black90 !important;
+    font-size: 16px !important;
+    font-weight: 600;
+  }
+  &.purple {
+    .card-tile-bottom {
+      color: $purple !important;
+    }
+    background-color: rgba(70, 71, 174, 0.1);
+  }
+  &.orange {
+    .card-tile-bottom {
+      color: $orange !important;
+    }
+    background-color: rgba(235, 91, 0, 0.1);
+  }
+  &.maroon {
+    .card-tile-bottom {
+      color: $maroon !important;
+    }
+    background-color: rgba(170, 28, 65, 0.1);
+  }
+  &.blue {
+    .card-tile-bottom {
+      color: $info !important;
+    }
+    background-color: rgba(27, 162, 219, 0.1);
+  }
+  &.teal {
+    .card-tile-bottom {
+      color: $teal !important;
+    }
+    background-color: rgba(36, 177, 177, 0.1);
+  }
+  &.pink {
+    .card-tile-bottom {
+      color: $pink !important;
+    }
+    background-color: rgba(255, 133, 187, 0.1);
+  }
+  &.green {
+    .card-tile-bottom {
+      color: $success !important;
+    }
+    background-color: rgba(39, 108, 52, 0.1);
+  }
+  &.yellow {
+    .card-tile-bottom {
+      color: $yellow !important;
+    }
+    background-color: rgba(255, 191, 0, 0.1);
+  }
+  &.navy {
+    .card-tile-bottom {
+      color: $navy !important;
+    }
+    background-color: rgba(53, 88, 114, 0.1);
+  }
+  &.sage {
+    .card-tile-bottom {
+      color: $sage !important;
+    }
+    background-color: rgba(131, 137, 33, 0.1);
   }
 }
 .card {

@@ -34,7 +34,7 @@ import { CommonValidator } from '~core/validators/common.validator';
 
 import { CONTACT_ID } from '~features/contact/contact.constant';
 import { Contact } from '~features/contact/contact.interface';
-import { ContactService } from '~features/contact/contact.service';
+import { ContactApi } from '~features/contact/contact.api';
 import { User } from '~features/user/user.interface';
 import { UserService } from '~features/user/user.service';
 
@@ -62,7 +62,7 @@ import { UserService } from '~features/user/user.service';
 export class ContactFormComponent implements OnInit {
   readonly dialogRef = inject(MatDialogRef<ContactFormComponent>);
   private formBuilder = inject(FormBuilder);
-  private contactService = inject(ContactService);
+  private contactApi = inject(ContactApi);
   private toastService = inject(ToastService);
   private userService = inject(UserService);
 
@@ -116,7 +116,7 @@ export class ContactFormComponent implements OnInit {
   }
 
   getContactById() {
-    this.contactService.getContact(this.data.contactId).subscribe((data) => {
+    this.contactApi.getContact(this.data.contactId).subscribe((data) => {
       data && this.setFormData(data);
     });
   }
@@ -162,7 +162,7 @@ export class ContactFormComponent implements OnInit {
       updatedTime: new Date(),
     };
     if (this.data.action === 'add') {
-      this.contactService
+      this.contactApi
         .addContact(contactInfo)
         .pipe(
           tap((response) => {
@@ -182,7 +182,7 @@ export class ContactFormComponent implements OnInit {
         )
         .subscribe();
     } else {
-      this.contactService
+      this.contactApi
         .updateContact(this.data.contactId, contactInfo)
         .pipe(
           tap((response) => {

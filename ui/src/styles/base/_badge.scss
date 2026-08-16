@@ -1,0 +1,54 @@
+@use "./variables" as *;
+
+.badge {
+  &.purple {
+    color: $purple !important;
+    background-color: rgba(70, 71, 174, 0.1);
+    border: 1px solid $purple;
+  }
+  &.orange {
+    color: $orange !important;
+    background-color: rgba(235, 91, 0, 0.1);
+    border: 1px solid $orange;
+  }
+  &.maroon {
+    color: $maroon !important;
+    background-color: rgba(170, 28, 65, 0.1);
+    border: 1px solid $maroon;
+  }
+  &.blue {
+    color: $info !important;
+    background-color: rgba(27, 162, 219, 0.1);
+    border: 1px solid $info;
+  }
+  &.teal {
+    color: $teal !important;
+    background-color: rgba(36, 177, 177, 0.1);
+    border: 1px solid $teal;
+  }
+  &.pink {
+    color: $pink !important;
+    background-color: rgba(255, 133, 187, 0.1);
+    border: 1px solid $pink;
+  }
+  &.green {
+    color: $success !important;
+    background-color: rgba(39, 108, 52, 0.1);
+    border: 1px solid $success;
+  }
+  &.yellow {
+    color: $yellow !important;
+    background-color: rgba(255, 191, 0, 0.1);
+    border: 1px solid $yellow;
+  }
+  &.navy {
+    color: $navy !important;
+    background-color: rgba(53, 88, 114, 0.1);
+    border: 1px solid $navy;
+  }
+  &.sage {
+    color: $sage !important;
+    background-color: rgba(131, 137, 33, 0.1);
+    border: 1px solid $sage;
+  }
+}
