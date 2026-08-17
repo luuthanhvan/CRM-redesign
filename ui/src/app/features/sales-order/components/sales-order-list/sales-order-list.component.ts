@@ -1,27 +1,32 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DecimalPipe } from '@angular/common';
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+
 import { Observable, combineLatest, of } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
   map,
+  tap,
   startWith,
   switchMap,
-  tap,
 } from 'rxjs/operators';
 
 import { MatButton } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSelectModule, MatSelectChange } from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+
+import { TranslateModule } from '@ngx-translate/core';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
@@ -33,30 +38,29 @@ import {
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
-import { TranslateModule } from '@ngx-translate/core';
-
 import { DialogComponent } from '~shared/components/dialog/dialog.component';
 import { NoDataFoundComponent } from '~shared/components/no-data-found/no-data-found.component';
-
-import { CommonService } from '~shared/services/common.service';
 import { ToastService } from '~shared/services/toast.service';
 
-import { CONTACT_ID } from '~features/contact/contact.constant';
-import { Contact } from '~features/contact/contact.interface';
-import { ContactApi } from '~features/contact/contact.api';
-import { ContactFormComponent } from '~features/contact/components/contact-form/contact-form.component';
-import { ContactService } from '~features/contact/contact.service';
+import { SALES_ORDER_ID } from '~features/sales-order/sales-order.constant';
+import { SalesOrder } from '~features/sales-order/sales-order.interface';
+import { SalesOrderApi } from '~features/sales-order/sales-order.api';
+import { SalesOrderFormComponent } from '~features/sales-order/components/sales-order-form/sales-order-form.component';
+import { SalesOrderService } from '~features/sales-order/sales-order.service';
 
 @Component({
-  selector: 'app-contact-list',
+  selector: 'app-sales-order-list',
   imports: [
     CommonModule,
+    DecimalPipe,
     FontAwesomeModule,
     FormsModule,
     MatButton,
+    MatCardModule,
     MatDatepickerModule,
     MatDialogModule,
     MatFormFieldModule,
+    MatIconModule,
     MatInputModule,
     MatNativeDateModule,
     MatPaginatorModule,
@@ -68,27 +72,24 @@ import { ContactService } from '~features/contact/contact.service';
     TranslateModule,
   ],
   providers: [MatDatepickerModule, MatNativeDateModule],
-  templateUrl: './contact-list.component.html',
-  styleUrl: './contact-list.component.scss',
+  templateUrl: './sales-order-list.component.html',
+  styleUrl: './sales-order-list.component.scss',
 })
-export class ContactListComponent implements OnInit {
-  @ViewChild(MatPaginator) contactPaginator!: MatPaginator;
+export class SalesOrderListComponent implements OnInit {
+  @ViewChild(MatPaginator) salesOrderPaginator!: MatPaginator;
 
-  private commonService = inject(CommonService);
-  private contactApi = inject(ContactApi);
   private router = inject(Router);
+  private salesOrderApi = inject(SalesOrderApi);
   private toastService = inject(ToastService);
+  protected salesOrderService = inject(SalesOrderService);
   public dialog = inject(MatDialog);
-  public contactService = inject(ContactService);
 
-  CONTACT_ID = CONTACT_ID;
+  SALES_ORDER_ID = SALES_ORDER_ID;
   displayedColumns: string[] = [
+    'subject',
     'contactName',
-    'salutation',
-    'organization',
-    'leadSrc',
-    'phone',
-    'email',
+    'status',
+    'total',
     'assignedTo',
   ];
   icon = {
@@ -99,14 +100,12 @@ export class ContactListComponent implements OnInit {
     faTrashCan,
     faXmark,
   };
-  dataSource = new MatTableDataSource<Contact>([]);
+
+  dataSource = new MatTableDataSource<SalesOrder>([]);
   totalRecords: number = 0;
-  contactIdsChecked: string[] = [];
-  leadSourceList: string[] = [];
-  selectedLeadSrc: string[] = [];
   searchText: FormControl = new FormControl('');
-  leadSource: FormControl = new FormControl('');
-  search$!: Observable<Contact[] | undefined>;
+  search$!: Observable<SalesOrder[] | undefined>;
+  orderIdsChecked: string[] = [];
   currentUserInfo: Record<string, any>;
 
   constructor() {
@@ -117,67 +116,50 @@ export class ContactListComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-    this.leadSourceList = this.contactService.getLeadSrc();
+  ngOnInit() {
     this.loadData();
   }
 
   loadData() {
     this.search$ = this.searchText.valueChanges.pipe(
       startWith(''),
-      tap((contactName) => {
-        // handle the search value before doing any further steps
+      tap((subject) => {
+        // handle the search value before doing any futher steps
       }),
       debounceTime(300),
       distinctUntilChanged(),
-      switchMap((contactName) =>
-        contactName
-          ? this.contactApi.searchContacts({
-              contactName,
-              ...(this.selectedLeadSrc.length > 0 && {
-                leadSource: this.selectedLeadSrc.toString(),
-              }),
-            })
+      switchMap((subject) =>
+        subject
+          ? this.salesOrderApi.searchSalesOrders({ subject })
           : of(undefined),
       ),
     );
 
-    combineLatest([this.contactApi.getListOfContacts(), this.search$])
-      .pipe(
-        map(([contacts, searchResult]) => {
-          const sourceData = searchResult || contacts;
-          return sourceData;
-        }),
-      )
-      .subscribe((contactData) => {
-        if (contactData) {
-          this.setTableData(contactData);
+    combineLatest([this.salesOrderApi.getListOfSalesOrders(), this.search$])
+      .pipe(map(([salesOrder, searchResult]) => searchResult || salesOrder))
+      .subscribe((data) => {
+        if (data) {
+          this.totalRecords = data.length;
+          this.dataSource = new MatTableDataSource(data);
+          this.dataSource.paginator = this.salesOrderPaginator;
         }
       });
   }
 
-  setTableData(data: Contact[]) {
-    this.totalRecords = data.length;
-    this.dataSource = new MatTableDataSource(data);
-    this.dataSource.paginator = this.contactPaginator;
-  }
-
   resetData() {
-    if (this.searchText.value !== '') {
-      this.searchText = new FormControl('');
-      this.loadData();
-    }
+    this.searchText = new FormControl('');
+    this.loadData();
   }
 
-  openFormDialog(action: string, contactId?: string) {
-    const formDialogRef = this.dialog.open(ContactFormComponent, {
+  openFormDialog(action: string, orderId?: string) {
+    const formDialogRef = this.dialog.open(SalesOrderFormComponent, {
       disableClose: true,
       width: '900px',
       maxWidth: '900px',
       minWidth: '560px',
       data: {
         action,
-        contactId,
+        orderId,
       },
     });
     formDialogRef.afterClosed().subscribe((result) => {
@@ -185,7 +167,7 @@ export class ContactListComponent implements OnInit {
     });
   }
 
-  onDelete(contactId: string) {
+  onDelete(orderId: string) {
     const confirmDialogRef = this.dialog.open(DialogComponent, {
       disableClose: false,
       width: '600px',
@@ -193,20 +175,16 @@ export class ContactListComponent implements OnInit {
     confirmDialogRef.componentInstance.sendingSubmitSignal.subscribe(
       (signal) => {
         if (signal) {
-          this.contactApi
-            .deleteContact(contactId)
+          this.salesOrderApi
+            .deleteSalesOrder(orderId)
             .pipe(
               tap((response) => {
                 if (response.isSuccess()) {
                   this.toastService.showSuccessMessage(
-                    'Delete the Contact!',
-                    this.CONTACT_ID.TOAST_DELETE_SUCCESS,
+                    'Delete the Sales order!',
                   );
                 } else {
-                  this.toastService.showErrorMessage(
-                    'Delete the Contact!',
-                    this.CONTACT_ID.TOAST_DELETE_FAILED,
-                  );
+                  this.toastService.showErrorMessage('Delete the Sales order!');
                 }
               }),
             )
@@ -221,7 +199,7 @@ export class ContactListComponent implements OnInit {
     });
   }
 
-  onBulkDeleteContacts() {
+  onBulkDeleteSalesOrders() {
     const confirmDialogRef = this.dialog.open(DialogComponent, {
       disableClose: false,
       width: '600px',
@@ -229,19 +207,17 @@ export class ContactListComponent implements OnInit {
     confirmDialogRef.componentInstance.sendingSubmitSignal.subscribe(
       (signal) => {
         if (signal) {
-          this.contactApi
-            .bulkDeleteContacts(this.contactIdsChecked)
+          this.salesOrderApi
+            .bulkDeleteSalesOrder(this.orderIdsChecked)
             .pipe(
               tap((response) => {
                 if (response.isSuccess()) {
                   this.toastService.showSuccessMessage(
-                    'Delete the Contacts!',
-                    this.CONTACT_ID.TOAST_DELETE_MULTIPLE_SUCCESS,
+                    'Delete the Sales orders!',
                   );
                 } else {
                   this.toastService.showErrorMessage(
-                    'Delete the Contacts!',
-                    this.CONTACT_ID.TOAST_DELETE_MULTIPLE_SUCCESS,
+                    'Delete the Sales orders!',
                   );
                 }
               }),
@@ -253,56 +229,26 @@ export class ContactListComponent implements OnInit {
       },
     );
     confirmDialogRef.afterClosed().subscribe((result) => {
-      this.contactIdsChecked = [];
+      this.orderIdsChecked = [];
       this.loadData();
     });
   }
 
   onCheckboxChecked(event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
-    const contactId = (event.target as HTMLInputElement).value;
+    const orderId = (event.target as HTMLInputElement).value;
     if (isChecked) {
       // add the checked value to array
-      this.contactIdsChecked.push(contactId);
+      this.orderIdsChecked.push(orderId);
     } else {
       // remove the unchecked value from array
-      this.contactIdsChecked.splice(
-        this.contactIdsChecked.indexOf(contactId),
-        1,
-      );
+      this.orderIdsChecked.splice(this.orderIdsChecked.indexOf(orderId), 1);
     }
-  }
-
-  onLeadSrcChange(event: MatSelectChange) {
-    this.selectedLeadSrc = event.value;
-    this.contactApi
-      .searchContacts({
-        ...(this.searchText.value !== '' && {
-          contactName: this.searchText.value,
-        }),
-        leadSource: this.selectedLeadSrc.toString(),
-      })
-      .subscribe((contactData) => {
-        if (contactData) {
-          this.setTableData(contactData);
-        }
-      });
   }
 
   navigateToSubScreen(screen: string, data: {}) {
     this.router.navigate([screen], {
       state: data,
-    });
-  }
-
-  onDownloadAllContacts() {
-    this.contactApi.exportAllContacts().subscribe({
-      next: (blobData: Blob) => {
-        this.commonService.downloadReport(blobData, 'contact_details_all.csv');
-      },
-      error: () => {
-        this.toastService.showErrorMessage('Cannot download the report file!');
-      },
     });
   }
 }

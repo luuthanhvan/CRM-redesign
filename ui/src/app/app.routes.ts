@@ -2,10 +2,11 @@ import { Routes } from '@angular/router';
 import { AuthGuard } from '~core/guards/auth.guard';
 
 import { contactRoutes } from '~features/contact/contact.routes';
+import { salesOrderRoutes } from '~features/sales-order/sales-order.routes';
+
 import { DashboardComponent } from '~features/dashboard/dashboard.component';
 import { HomeComponent } from '~core/layout/home/home.component';
 import { LoginComponent } from '~features/authentication/pages/login/login.component';
-import { SalesOrderComponent } from '~features/sales-order/sales-order.component';
 import { UserComponent } from '~features/user/user.component';
 
 export const appRoutes: Routes = [
@@ -19,7 +20,7 @@ export const appRoutes: Routes = [
         path: 'contact',
         children: contactRoutes,
       },
-      { path: 'sales-order', component: SalesOrderComponent },
+      { path: 'sales-order', children: salesOrderRoutes },
       { path: 'user', component: UserComponent },
     ],
   },

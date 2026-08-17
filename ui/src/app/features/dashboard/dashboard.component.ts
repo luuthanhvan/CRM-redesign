@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DecimalPipe } from '@angular/common';
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
 
 import { MatCardModule } from '@angular/material/card';
@@ -17,13 +17,14 @@ import {
 
 import { DASHBOARD_ID } from '~features/dashboard/dashboard.constant';
 import { ContactApi } from '~features/contact/contact.api';
-import { SalesOrderService } from '~features/sales-order/sales-order.service';
+import { SalesOrderApi } from '~features/sales-order/sales-order.api';
 
 @Component({
   selector: 'app-dashboard',
   imports: [
     BaseChartDirective,
     CommonModule,
+    DecimalPipe,
     FontAwesomeModule,
     MatCardModule,
     TranslateModule,
@@ -34,8 +35,9 @@ import { SalesOrderService } from '~features/sales-order/sales-order.service';
 export class DashboardComponent implements OnInit {
   @ViewChild(BaseChartDirective) contactChart!: BaseChartDirective;
   @ViewChild(BaseChartDirective) salesOrderChart!: BaseChartDirective;
-  contactApi = inject(ContactApi);
-  salesOrderService = inject(SalesOrderService);
+
+  private contactApi = inject(ContactApi);
+  private salesOrderApi = inject(SalesOrderApi);
 
   DASHBOARD_ID = DASHBOARD_ID;
   icon = {
@@ -139,7 +141,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadSalesOrderChartData() {
-    this.salesOrderService.countSalesOrder('status').subscribe((data: any) => {
+    this.salesOrderApi.countSalesOrder('status').subscribe((data: any) => {
       if (data) {
         this.salesOrderPieChartDatasets = [...this.salesOrderPieChartDatasets];
         const salesOrderCount = data['salesOrderCount'];

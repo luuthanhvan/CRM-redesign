@@ -1,0 +1,188 @@
+<div class="row mx-4 my-3">
+  <div class="col-12">
+    <h2 class="float-start text-primary">
+      {{ "salesOrder.title" | translate }}
+    </h2>
+  </div>
+  <div class="col-12 mb-3">
+    <div class="float-start search-field">
+      <mat-form-field appearance="outline" [id]="SALES_ORDER_ID.INPUT_SEARCH">
+        <fa-icon
+          [icon]="icon.faMagnifyingGlass"
+          size="lg"
+          class="me-2"
+        ></fa-icon>
+        <input
+          matInput
+          placeholder="{{ 'salesOrder.searchBySubject' | translate }}"
+          [formControl]="searchText"
+        />
+        <fa-icon
+          [icon]="icon.faXmark"
+          size="lg"
+          class="me-2 pointer"
+          [matTooltip]="
+            searchText.value !== '' ? ('shared.clear' | translate) : ''
+          "
+          [class.active]="searchText.value !== ''"
+          (click)="resetData()"
+        ></fa-icon>
+      </mat-form-field>
+    </div>
+    <div
+      class="float-end d-flex align-items-center gap-2"
+      *ngIf="currentUserInfo && currentUserInfo['isAdmin']"
+    >
+      <button
+        mat-button
+        [ngClass]="orderIdsChecked.length === 0 ? 'btn-disabled' : 'btn-danger'"
+        [disabled]="orderIdsChecked.length === 0"
+        (click)="orderIdsChecked.length !== 0 && onBulkDeleteSalesOrders()"
+        [id]="
+          orderIdsChecked.length === 0
+            ? SALES_ORDER_ID.BUTTON_DELETE_DISABLED
+            : SALES_ORDER_ID.BUTTON_DELETE_ENABLED
+        "
+      >
+        <fa-icon [icon]="icon.faTrashCan" size="lg" class="me-2"></fa-icon>
+        <span>
+          {{ "salesOrder.deleteSalesOrder" | translate }}
+        </span>
+      </button>
+      <button
+        mat-button
+        class="btn-primary"
+        (click)="openFormDialog('add')"
+        [id]="SALES_ORDER_ID.BUTTON_CREATE"
+      >
+        <mat-icon>add</mat-icon>
+        <span>
+          {{ "salesOrder.createNewSalesOrder" | translate }}
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <div class="col-12 sales-order-list mb-3">
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      class="mat-elevation-z8"
+      [class.no-data-table]="totalRecords === 0"
+      [id]="SALES_ORDER_ID.SALES_ORDER_LIST"
+    >
+      <ng-container
+        matColumnDef="select"
+        *ngIf="currentUserInfo && currentUserInfo['isAdmin']"
+      >
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td class="text-center" mat-cell *matCellDef="let element">
+          <input
+            type="checkbox"
+            [value]="element._id"
+            (change)="onCheckboxChecked($event)"
+          />
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="subject">
+        <th class="text-center" mat-header-cell *matHeaderCellDef>
+          {{ "salesOrder.table.subject" | translate }}
+        </th>
+        <td
+          class="text-center pointer"
+          mat-cell
+          *matCellDef="let element"
+          (click)="
+            navigateToSubScreen('/sales-order/sales-order-details', {
+              salesOrderId: element._id,
+            })
+          "
+        >
+          {{ element.subject }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="contactName">
+        <th class="text-center" mat-header-cell *matHeaderCellDef>
+          {{ "salesOrder.table.contactName" | translate }}
+        </th>
+        <td class="text-center" mat-cell *matCellDef="let element">
+          {{ element.contactName }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th class="text-center" mat-header-cell *matHeaderCellDef>
+          {{ "salesOrder.table.status" | translate }}
+        </th>
+        <td class="text-center" mat-cell *matCellDef="let element">
+          <div
+            class="badge rounded-pill"
+            [ngClass]="salesOrderService.getStatusBadgeColor(element.status)"
+          >
+            <span>{{ element.status }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="total">
+        <th class="text-center" mat-header-cell *matHeaderCellDef>
+          {{ "salesOrder.table.total" | translate }}
+        </th>
+        <td class="text-center" mat-cell *matCellDef="let element">
+          $ {{ element.total | number: "1.0-2" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="assignedTo">
+        <th class="text-center" mat-header-cell *matHeaderCellDef>
+          {{ "salesOrder.table.assignedTo" | translate }}
+        </th>
+        <td class="text-center" mat-cell *matCellDef="let element">
+          {{ element.assignedTo }}
+        </td>
+      </ng-container>
+
+      <ng-container
+        matColumnDef="actions"
+        *ngIf="currentUserInfo && currentUserInfo['isAdmin']"
+      >
+        <th class="text-center" mat-header-cell *matHeaderCellDef>
+          {{ "shared.actions" | translate }}
+        </th>
+        <td class="text-center" mat-cell *matCellDef="let element">
+          <fa-icon
+            [icon]="icon.faPencil"
+            size="lg"
+            class="text-warning pointer mx-1"
+            [matTooltip]="'shared.edit' | translate"
+            (click)="openFormDialog('edit', element._id)"
+          ></fa-icon>
+          <fa-icon
+            [icon]="icon.faTrashCan"
+            size="lg"
+            class="text-danger pointer mx-1"
+            [matTooltip]="'shared.delete' | translate"
+            (click)="onDelete(element._id)"
+          ></fa-icon>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <app-no-data-found
+      *ngIf="totalRecords === 0"
+      [id]="SALES_ORDER_ID.SALES_ORDER_LIST_NOT_FOUND"
+    ></app-no-data-found>
+  </div>
+  <div [hidden]="totalRecords === 0">
+    <mat-paginator
+      [id]="SALES_ORDER_ID.SALES_ORDER_LIST_PAGINATION"
+      #salesOrderPaginator
+      [length]="totalRecords"
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 20, 30, 40, 50]"
+    ></mat-paginator>
+  </div>
+</div>

@@ -1,127 +1,129 @@
-<div [id]="SALES_ORDER_ID.SALES_ORDER_DETAILS">
-  <h2 mat-dialog-title>
-    {{ "salesOrder.salesOrderDetails" | translate }}
-  </h2>
-  <mat-dialog-content>
-    <mat-list role="list" [id]="SALES_ORDER_ID.SALES_ORDER_DETAILS_LIST">
-      <mat-list-item
-        role="listitem"
-        class="d-flex justify-content-between align-items-center"
-      >
-        <span class="text-bold float-start">
-          {{ "salesOrder.table.subject" | translate }}
-        </span>
-        <span class="text-grey float-end">
-          {{ salesOrder.subject || ("shared.missingValue" | translate) }}
-        </span>
-      </mat-list-item>
-
-      <mat-list-item
-        role="listitem"
-        class="d-flex justify-content-between align-items-center"
-      >
-        <span class="text-bold float-start">
-          {{ "salesOrder.table.contactName" | translate }}
-        </span>
-        <span class="text-grey float-end">
-          {{ salesOrder.contactName || ("shared.missingValue" | translate) }}
-        </span>
-      </mat-list-item>
-
-      <mat-list-item
-        role="listitem"
-        class="d-flex justify-content-between align-items-center"
-      >
-        <span class="text-bold loat-start">
-          {{ "salesOrder.table.status" | translate }}
-        </span>
-        <span class="text-grey float-end">
-          {{ salesOrder.status || ("shared.missingValue" | translate) }}
-        </span>
-      </mat-list-item>
-
-      <mat-list-item
-        role="listitem"
-        class="d-flex justify-content-between align-items-center"
-      >
-        <span class="text-bold loat-start">
-          {{ "salesOrder.table.total" | translate }}
-        </span>
-        <span class="text-grey float-end">
-          {{ salesOrder.total || ("shared.missingValue" | translate) }}
-        </span>
-      </mat-list-item>
-
-      <mat-list-item
-        role="listitem"
-        class="d-flex justify-content-between align-items-center"
-      >
-        <span class="text-bold loat-start">
-          {{ "salesOrder.table.assignedTo" | translate }}
-        </span>
-        <span class="text-grey float-end">
-          {{ salesOrder.assignedTo || ("shared.missingValue" | translate) }}
-        </span>
-      </mat-list-item>
-
-      <mat-list-item
-        role="listitem"
-        class="d-flex justify-content-between align-items-center"
-      >
-        <span class="text-bold loat-start">
-          {{ "salesOrder.table.creator" | translate }}
-        </span>
-        <span class="text-grey float-end">
-          {{ salesOrder.creator || ("shared.missingValue" | translate) }}
-        </span>
-      </mat-list-item>
-
-      <mat-list-item
-        role="listitem"
-        class="d-flex justify-content-between align-items-center"
-      >
-        <span class="text-bold loat-start">
-          {{ "salesOrder.table.description" | translate }}
-        </span>
-        <span class="text-grey float-end">
-          {{ salesOrder.description || ("shared.missingValue" | translate) }}
-        </span>
-      </mat-list-item>
-
-      <mat-list-item
-        role="listitem"
-        class="d-flex justify-content-between align-items-center"
-      >
-        <span class="text-bold loat-start">
-          {{ "salesOrder.table.createdTime" | translate }}
-        </span>
-        <span class="text-grey float-end">
-          {{
-            (salesOrder.createdTime | date : "medium") ||
-              ("shared.missingValue" | translate)
-          }}
-        </span>
-      </mat-list-item>
-
-      <mat-list-item
-        role="listitem"
-        class="d-flex justify-content-between align-items-center border-none"
-      >
-        <span class="text-bold loat-start">
-          {{ "salesOrder.table.updatedTime" | translate }}
-        </span>
-        <span class="text-grey float-end">
-          {{
-            (salesOrder.updatedTime | date : "medium") ||
-              ("shared.missingValue" | translate)
-          }}
-        </span>
-      </mat-list-item>
-    </mat-list>
-  </mat-dialog-content>
-  <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close [id]="SALES_ORDER_ID.BUTTON_CLOSE">
-      {{ "shared.close" | translate }}
-    </button>
-  </mat-dialog-actions>
+<div
+  [id]="SALES_ORDER_ID.SALES_ORDER_DETAILS"
+  class="row mx-4 my-3"
+  *ngIf="salesOrder"
+>
+  <div class="col-12 mb-3">
+    <div class="breadcrumb d-flex gap-2 mb-0">
+      @for (page of NAVIGATION_PAGES; track page.route) {
+        <p
+          [class.pointer]="page.route"
+          [class.text-info]="page.route"
+          [class.text-grey]="!page.route"
+          [routerLink]="page.route"
+        >
+          {{ page.label }}
+        </p>
+        @if (page.route) {
+          <span class="text-grey"> > </span>
+        }
+      }
+    </div>
+    <h2 class="float-start text-primary">
+      {{ salesOrder.subject || ("shared.missingValue" | translate) }}
+    </h2>
+  </div>
+  <div [id]="SALES_ORDER_ID.SALES_ORDER_DETAILS_LIST">
+    <div class="col-12 mb-3">
+      <div class="row">
+        <div class="col-12 p-0 d-flex justify-content-start gap-2">
+          <div class="card-tile purple">
+            <span class="card-tile-top">
+              {{ "salesOrder.table.contactName" | translate }}
+            </span>
+            <span class="card-tile-bottom">
+              {{ salesOrder.contactName || ("shared.missingValue" | translate) }}
+            </span>
+          </div>
+  
+          <div class="card-tile">
+            <span class="card-tile-top">
+              {{ "salesOrder.table.status" | translate }}
+            </span>
+            <span class="card-tile-bottom">
+              @if (salesOrder.status) {
+                <div
+                  class="badge rounded-pill"
+                  [ngClass]="
+                    salesOrderService.getStatusBadgeColor(salesOrder.status)
+                  "
+                >
+                  <span>{{ salesOrder.status }}</span>
+                </div>
+              } @else {
+                {{ "shared.missingValue" | translate }}
+              }
+            </span>
+          </div>
+  
+          <div class="card-tile blue">
+            <span class="card-tile-top">
+              {{ "salesOrder.table.total" | translate }}
+            </span>
+            <span class="card-tile-bottom">
+              $ {{ salesOrder.total || 0 | number: "1.0-2" }}
+            </span>
+          </div>
+  
+          <div class="card-tile teal">
+            <span class="card-tile-top">
+              {{ "salesOrder.table.assignedTo" | translate }}
+            </span>
+            <span class="card-tile-bottom">
+              {{ salesOrder.assignedTo || ("shared.missingValue" | translate) }}
+            </span>
+          </div>
+  
+          <div class="card-tile maroon">
+            <span class="card-tile-top">
+              {{ "salesOrder.table.creator" | translate }}
+            </span>
+            <span class="card-tile-bottom">
+              {{ salesOrder.creator || ("shared.missingValue" | translate) }}
+            </span>
+          </div>
+  
+          <div class="card-tile navy">
+            <span class="card-tile-top">
+              {{ "salesOrder.table.createdTime" | translate }}
+            </span>
+            <span class="card-tile-bottom">
+              {{
+                (salesOrder.createdTime | date) ||
+                  ("shared.missingValue" | translate)
+              }}
+            </span>
+          </div>
+  
+          <div class="card-tile sage">
+            <span class="card-tile-top">
+              {{ "salesOrder.table.updatedTime" | translate }}
+            </span>
+            <span class="card-tile-bottom">
+              {{
+                (salesOrder.updatedTime | date) ||
+                  ("shared.missingValue" | translate)
+              }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 mb-3">
+      <div class="row">
+        <div class="col-12 p-0">
+          <div class="card">
+            <div class="card-header">
+              {{ "salesOrder.table.description" | translate }}
+            </div>
+            <p class="px-3 pt-3">
+              {{
+                salesOrder.description || ("shared.missingValue" | translate)
+              }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

@@ -65,9 +65,9 @@ export class ContactFormComponent implements OnInit {
   private contactApi = inject(ContactApi);
   private toastService = inject(ToastService);
   private userService = inject(UserService);
+  data = inject(MAT_DIALOG_DATA);
 
   CONTACT_ID = CONTACT_ID;
-  data = inject(MAT_DIALOG_DATA);
   salutations: string[] = ['None', 'Mr.', 'Mrs.', 'Ms.', 'Dr.', 'Prof.'];
   leadSources: string[] = [
     'Existing Customer',
@@ -81,6 +81,7 @@ export class ContactFormComponent implements OnInit {
     faPencil,
     faPlus,
   };
+
   contactForm!: FormGroup;
   assignedToUsers: User[] = [];
   // retain created time when editing Sales order

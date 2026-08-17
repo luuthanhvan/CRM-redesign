@@ -13,7 +13,9 @@
               <p>Total contacts</p>
             </div>
             <div class="card-value">
-              <h2 class="text-primary">{{ totalContacts }}</h2>
+              <h2 class="text-primary">
+                {{ totalContacts | number: "1.0-2" }}
+              </h2>
             </div>
           </div>
           <div class="card-right">
@@ -27,7 +29,9 @@
               <p>Total sales orders</p>
             </div>
             <div class="card-value">
-              <h2 class="text-primary">{{ totalSalesOrders }}</h2>
+              <h2 class="text-primary">
+                {{ totalSalesOrders | number: "1.0-2" }}
+              </h2>
             </div>
           </div>
           <div class="card-right">
@@ -42,10 +46,12 @@
         <div class="dashboard-card px-3 py-2 green">
           <div class="card-left">
             <div class="card-title">
-              <p>Total revenue (current month)</p>
+              <p>Total revenue</p>
             </div>
             <div class="card-value">
-              <h2 class="text-primary">$ {{ totalRevenue }}</h2>
+              <h2 class="text-primary">
+                $ {{ totalRevenue | number: "1.0-2" }}
+              </h2>
             </div>
           </div>
           <div class="card-right">

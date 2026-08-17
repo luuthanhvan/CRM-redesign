@@ -26,14 +26,19 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { TranslateModule } from '@ngx-translate/core';
 
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faPencil, faPlus } from '@fortawesome/free-solid-svg-icons';
+
 import { ToastService } from '~shared/services/toast.service';
 import { CommonValidator } from '~core/validators/common.validator';
 
 import { Contact } from '~features/contact/contact.interface';
 import { ContactApi } from '~features/contact/contact.api';
+
 import { SALES_ORDER_ID } from '~features/sales-order/sales-order.constant';
 import { SalesOrder } from '~features/sales-order/sales-order.interface';
-import { SalesOrderService } from '~features/sales-order/sales-order.service';
+import { SalesOrderApi } from '~features/sales-order/sales-order.api';
+
 import { User } from '~features/user/user.interface';
 import { UserService } from '~features/user/user.service';
 
@@ -41,8 +46,8 @@ import { UserService } from '~features/user/user.service';
   selector: 'app-sales-order-form',
   imports: [
     CommonModule,
+    FontAwesomeModule,
     FormsModule,
-    ReactiveFormsModule,
     MatButtonModule,
     MatCheckboxModule,
     MatDialogModule,
@@ -51,22 +56,28 @@ import { UserService } from '~features/user/user.service';
     MatInputModule,
     MatSelectModule,
     MatSlideToggleModule,
+    ReactiveFormsModule,
     TranslateModule,
   ],
   templateUrl: './sales-order-form.component.html',
   styleUrl: './sales-order-form.component.scss',
 })
 export class SalesOrderFormComponent implements OnInit {
-  readonly dialogRef = inject(MatDialogRef<SalesOrderFormComponent>);
-  private formBuilder = inject(FormBuilder);
-  private toastService = inject(ToastService);
   private contactApi = inject(ContactApi);
+  private formBuilder = inject(FormBuilder);
+  private salesOrderApi = inject(SalesOrderApi);
+  private toastService = inject(ToastService);
   private userService = inject(UserService);
-  private salesOrderService = inject(SalesOrderService);
+  readonly dialogRef = inject(MatDialogRef<SalesOrderFormComponent>);
+  data = inject(MAT_DIALOG_DATA);
 
   SALES_ORDER_ID = SALES_ORDER_ID;
   statusNames: string[] = ['Created', 'Approved', 'Delivered', 'Canceled'];
-  data = inject(MAT_DIALOG_DATA);
+  icon = {
+    faPencil,
+    faPlus,
+  };
+
   salesOrderForm!: FormGroup;
   contacts: Contact[] = [];
   assignedToUsers: User[] = [];
@@ -105,11 +116,9 @@ export class SalesOrderFormComponent implements OnInit {
   }
 
   getSalesOrderById() {
-    this.salesOrderService
-      .getSalesOrder(this.data.orderId)
-      .subscribe((data) => {
-        data && this.setFormData(data);
-      });
+    this.salesOrderApi.getSalesOrder(this.data.orderId).subscribe((data) => {
+      data && this.setFormData(data);
+    });
   }
 
   setFormData(data: SalesOrder) {
@@ -141,7 +150,7 @@ export class SalesOrderFormComponent implements OnInit {
       updatedTime: new Date(),
     };
     if (this.data.action === 'add') {
-      this.salesOrderService
+      this.salesOrderApi
         .addSalesOrder(salesOrderInfo)
         .pipe(
           tap((response) => {
@@ -156,7 +165,7 @@ export class SalesOrderFormComponent implements OnInit {
         )
         .subscribe();
     } else {
-      this.salesOrderService
+      this.salesOrderApi
         .updateSalesOrder(this.data.orderId, salesOrderInfo)
         .pipe(
           tap((response) => {
