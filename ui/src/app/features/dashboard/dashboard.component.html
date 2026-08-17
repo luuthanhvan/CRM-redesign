@@ -10,7 +10,7 @@
         <div class="dashboard-card px-3 py-2 navy">
           <div class="card-left">
             <div class="card-title">
-              <p>Total contacts</p>
+              <p>{{ "dashboard.totalContacts" | translate }}</p>
             </div>
             <div class="card-value">
               <h2 class="text-primary">
@@ -26,7 +26,7 @@
         <div class="dashboard-card px-3 py-2 purple">
           <div class="card-left">
             <div class="card-title">
-              <p>Total sales orders</p>
+              <p>{{ "dashboard.totalSalesOrders" | translate }}</p>
             </div>
             <div class="card-value">
               <h2 class="text-primary">
@@ -46,7 +46,7 @@
         <div class="dashboard-card px-3 py-2 green">
           <div class="card-left">
             <div class="card-title">
-              <p>Total revenue</p>
+              <p>{{ "dashboard.totalRevenue" | translate }}</p>
             </div>
             <div class="card-value">
               <h2 class="text-primary">
@@ -68,9 +68,9 @@
     <div class="col-6 mb-3">
       <div class="dashboard-chart-wrapper" id="contact-chart">
         <div class="chart-title">
-          <h5>Contacts</h5>
+          <h5>{{ "contact.title" | translate }}</h5>
           <span>
-            Distribution of contacts based on potential customer sources
+            {{ "contact.contactCountByLeadSrc" | translate }}
           </span>
         </div>
         <canvas
@@ -88,8 +88,8 @@
     <div class="col-6 mb-3">
       <div class="dashboard-chart-wrapper" id="sales-order-chart">
         <div class="chart-title">
-          <h5>Sales Orders</h5>
-          <span> Distribution of sales orders based on the statuses </span>
+          <h5>{{ "salesOrder.title" | translate }}</h5>
+          <span> {{ "salesOrder.salesOrderCountByStatus" | translate }} </span>
         </div>
         <canvas
           #salesOrderChart
@@ -107,8 +107,8 @@
     <div class="col-12 mb-3">
       <div class="dashboard-chart-wrapper bar-chart">
         <div class="chart-title">
-          <h5>Monthly Revenue (USD)</h5>
-          <span> Distribution of total revenue by month </span>
+          <h5>{{ "salesOrder.monthlyRevenue" | translate }}</h5>
+          <span>{{ "salesOrder.monthlyRevenueDistribution" | translate }}</span>
         </div>
         <canvas
           width="900"

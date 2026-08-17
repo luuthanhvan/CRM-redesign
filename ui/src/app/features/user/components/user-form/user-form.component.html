@@ -14,20 +14,21 @@
             {{ "user.table.name" | translate }}
           </mat-label>
           <input matInput formControlName="name" />
-          @if (userForm.controls['name'].errors?.['required']) {
-          <mat-error>
-            {{ "shared.error.nameRequired" | translate }}
-          </mat-error>
-          } @if (userForm.controls['name'].errors?.['noSpecialCharacters']){
-          <mat-error>
-            {{
-              "shared.error.noSpecialCharacters"
-                | translate
-                  : {
-                      fieldName: ("user.table.name" | translate)
-                    }
-            }}
-          </mat-error>
+          @if (userForm.controls["name"].errors?.["required"]) {
+            <mat-error>
+              {{ "shared.error.nameRequired" | translate }}
+            </mat-error>
+          }
+          @if (userForm.controls["name"].errors?.["noSpecialCharacters"]) {
+            <mat-error>
+              {{
+                "shared.error.noSpecialCharacters"
+                  | translate
+                    : {
+                        fieldName: ("user.table.name" | translate),
+                      }
+              }}
+            </mat-error>
           }
         </mat-form-field>
         <mat-form-field class="col-6" appearance="outline">
@@ -35,10 +36,10 @@
             {{ "user.table.username" | translate }}
           </mat-label>
           <input matInput formControlName="username" />
-          @if (userForm.controls['username'].errors?.['required']) {
-          <mat-error>
-            {{ "shared.error.usernameRequired" | translate }}
-          </mat-error>
+          @if (userForm.controls["username"].errors?.["required"]) {
+            <mat-error>
+              {{ "shared.error.usernameRequired" | translate }}
+            </mat-error>
           }
         </mat-form-field>
       </div>
@@ -49,15 +50,18 @@
             {{ "user.table.password" | translate }}
           </mat-label>
           <input matInput type="password" formControlName="password" />
-          @if (userForm.invalid &&
-          userForm.controls['password'].errors?.['required']) {
-          <mat-error>
-            {{ "shared.error.passwordRequired" | translate }}
-          </mat-error>
-          } @if (userForm.controls['password'].errors?.['minlength']) {
-          <mat-error>
-            {{ "shared.error.passwordMinLength" | translate }}
-          </mat-error>
+          @if (
+            userForm.invalid &&
+            userForm.controls["password"].errors?.["required"]
+          ) {
+            <mat-error>
+              {{ "shared.error.passwordRequired" | translate }}
+            </mat-error>
+          }
+          @if (userForm.controls["password"].errors?.["minlength"]) {
+            <mat-error>
+              {{ "shared.error.passwordMinLength" | translate }}
+            </mat-error>
           }
         </mat-form-field>
         <mat-form-field class="col-6" appearance="outline">
@@ -65,14 +69,15 @@
             {{ "user.table.confirmPassword" | translate }}
           </mat-label>
           <input matInput type="password" formControlName="confirmPassword" />
-          @if (userForm.controls['confirmPassword'].errors?.['required']) {
-          <mat-error>
-            {{ "shared.error.confirmPasswordRequired" | translate }}
-          </mat-error>
-          } @if (userForm.controls['confirmPassword'].errors?.['matching']) {
-          <mat-error>
-            {{ "shared.error.passwordsMustMatch" | translate }}
-          </mat-error>
+          @if (userForm.controls["confirmPassword"].errors?.["required"]) {
+            <mat-error>
+              {{ "shared.error.confirmPasswordRequired" | translate }}
+            </mat-error>
+          }
+          @if (userForm.controls["confirmPassword"].errors?.["matching"]) {
+            <mat-error>
+              {{ "shared.error.passwordsMustMatch" | translate }}
+            </mat-error>
           }
         </mat-form-field>
       </div>
@@ -86,14 +91,15 @@
           <mat-hint>
             {{ "shared.hint.email" | translate }}
           </mat-hint>
-          @if (userForm.controls['email'].errors?.['required']) {
-          <mat-error>
-            {{ "shared.error.emailRequired" | translate }}
-          </mat-error>
-          } @if (userForm.controls['email'].errors?.['email']) {
-          <mat-error>
-            {{ "shared.error.emailInvalid" | translate }}
-          </mat-error>
+          @if (userForm.controls["email"].errors?.["required"]) {
+            <mat-error>
+              {{ "shared.error.emailRequired" | translate }}
+            </mat-error>
+          }
+          @if (userForm.controls["email"].errors?.["email"]) {
+            <mat-error>
+              {{ "shared.error.emailInvalid" | translate }}
+            </mat-error>
           }
         </mat-form-field>
         <mat-form-field class="col-6" appearance="outline">
@@ -101,24 +107,25 @@
             {{ "user.table.phone" | translate }}
           </mat-label>
           <input matInput formControlName="phone" />
-          @if (userForm.controls['phone'].errors?.['required']) {
-          <mat-error>
-            {{ "shared.error.phoneRequired" | translate }}
-          </mat-error>
-          } @if (userForm.controls['phone'].errors?.['pattern']) {
-          <mat-error>
-            {{ "shared.error.phoneInvalid" | translate }}
-          </mat-error>
+          @if (userForm.controls["phone"].errors?.["required"]) {
+            <mat-error>
+              {{ "shared.error.phoneRequired" | translate }}
+            </mat-error>
+          }
+          @if (userForm.controls["phone"].errors?.["pattern"]) {
+            <mat-error>
+              {{ "shared.error.phoneInvalid" | translate }}
+            </mat-error>
           }
         </mat-form-field>
       </div>
 
       <div class="row my-3 d-flex align-items-center">
         <mat-checkbox class="col-2" formControlName="isAdmin">
-          {{ "user.table.admin" | translate }}
+          {{ "user.table.role" | translate }}
         </mat-checkbox>
         <mat-slide-toggle class="col-2 mx-4" formControlName="isActive">
-          {{ "user.table.active" | translate }}
+          {{ "user.table.status" | translate }}
         </mat-slide-toggle>
       </div>
     </form>

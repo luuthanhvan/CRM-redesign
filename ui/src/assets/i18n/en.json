@@ -6,6 +6,7 @@
     "contactDetails": "Contact Details",
     "searchByContactName": "Search Contact by Contact Name",
     "deleteContact": "Delete Contact(s)",
+    "contactCountByLeadSrc": "Distribution of contacts based on potential customer sources",
     "table": {
       "contactName": "Contact Name",
       "salutation": "Salutation",
@@ -29,6 +30,9 @@
     "salesOrderDetails": "Sales Order Details",
     "searchBySubject": "Search Sales Order by Subject",
     "deleteSalesOrder": "Delete Sales Order(s)",
+    "salesOrderCountByStatus": "Distribution of sales orders based on the statuses",
+    "monthlyRevenue": "Monthly Revenue (USD)",
+    "monthlyRevenueDistribution": "Distribution of total revenue by month",
     "table": {
       "subject": "Subject",
       "contactName": "Contact Name",
@@ -45,22 +49,24 @@
     "title": "Users",
     "createNewUser": "Add User",
     "editUserInfo": "Edit User",
-    "listOfUsers": "List of Users",
     "userDetails": "User Details",
     "table": {
       "name": "Full Name",
       "username": "Username",
       "password": "Password",
       "confirmPassword": "Confirm password",
-      "admin": "Admin",
-      "active": "Status",
+      "role": "Role",
+      "status": "Status",
       "email": "Email",
       "phone": "Phone Number",
       "createdTime": "Created on"
     }
   },
   "dashboard": {
-    "title": "Dashboard"
+    "title": "Dashboard",
+    "totalContacts": "Total Contacts",
+    "totalSalesOrders": "Total Sales Orders",
+    "totalRevenue": "Total Revenue"
   },
   "shared": {
     "modify": "Modify",
@@ -80,12 +86,12 @@
     "login": "Login",
     "welcome": "Welcome to CRM",
     "enterCredential": "Please enter your username and password",
-    "register": "Register",
     "signout": "Sign-out",
     "language": "Language",
     "actions": "Actions",
     "missingValue": "-",
     "noDataAvailable": "No Data Available",
+    "copyright": "© 2026 Van Luu",
     "hint": {
       "email": "Example: abc@gmail.com"
     },

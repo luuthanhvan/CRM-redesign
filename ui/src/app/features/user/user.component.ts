@@ -108,17 +108,17 @@ export class UserComponent implements OnInit {
       { key: 'phone', text: 'user.table.phone', type: 'phone' },
       {
         key: 'isAdmin',
-        text: 'user.table.admin',
+        text: 'user.table.role',
         type: 'boolean',
         truly: 'Admin',
         falsy: 'Employee',
       },
       {
         key: 'isActive',
-        text: 'user.table.active',
+        text: 'user.table.status',
         type: 'boolean',
-        truly: 'Activated',
-        falsy: 'Deactivated',
+        truly: 'Active',
+        falsy: 'Terminated',
       },
       { key: 'createdTime', text: 'user.table.createdTime', type: 'time' },
     ];

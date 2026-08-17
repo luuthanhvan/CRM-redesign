@@ -31,7 +31,6 @@ export class TableComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   private datePipe = inject(DatePipe);
-  formattedDate: string = 'medium';
 
   ngOnInit(): void {}
 
@@ -40,7 +39,7 @@ export class TableComponent implements OnInit {
     const cellValue = row[column['key']];
 
     if (cellType === 'time') {
-      return this.datePipe.transform(cellValue, this.formattedDate);
+      return this.datePipe.transform(cellValue);
     }
     if (cellType === 'boolean') {
       return cellValue === true ? column['truly'] : column['falsy'];

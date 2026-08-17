@@ -5,8 +5,9 @@
     "editContact": "Chỉnh sửa thông tin liên hệ",
     "contactDetails": "Chi tiết thông tin liên hệ",
     "searchByContactName": "Tìm kiếm theo tên liên hệ",
+    "deleteContact": "Xóa liên hệ",
+    "contactCountByLeadSrc": "Phân bổ liên hệ dựa trên nguồn khách hàng tiềm năng",
     "table": {
-      "title": "Danh sách liên hệ",
       "contactName": "Tên liên hệ",
       "salutation": "Danh xưng",
       "phone": "Số điện thoại",
@@ -27,13 +28,16 @@
     "createNewSalesOrder": "Tạo mới đơn đặt hàng",
     "editSalesOrderInfo": "Chỉnh sửa đơn đặt hàng",
     "salesOrderDetails": "Chi tiết đơn đặt hàng",
-    "listOfSalesOrder": "Danh sách đơn đặt hàng",
     "searchBySubject": "Tìm kiếm theo nội dung",
+    "deleteSalesOrder": "Xóa đơn hàng",
+    "salesOrderCountByStatus": "Phân bổ đơn đặt hàng dựa trên trạng thái",
+    "monthlyRevenue": "Doanh thu hàng tháng (USD)",
+    "monthlyRevenueDistribution": "Phân bổ tổng doanh thu theo tháng",
     "table": {
-      "subject": "Chủ đề",
+      "subject": "Nội dung đơn hàng",
       "contactName": "Tên liên hệ",
       "status": "Trạng thái",
-      "total": "Tổng số",
+      "total": "Tổng tiền",
       "assignedTo": "Phụ trách",
       "creator": "Tạo bởi",
       "description": "Mô tả thêm",
@@ -45,27 +49,28 @@
     "title": "Quản lý nhân viên",
     "createNewUser": "Tạo mới thông tin nhân viên",
     "editUserInfo": "Chỉnh sửa thông tin nhân viên",
-    "listOfUsers": "Danh sách nhân viên",
     "userDetails": "Chi tiết thông tin nhân viên",
     "table": {
       "name": "Họ tên",
       "username": "Tên đăng nhập",
       "password": "Mật khẩu",
       "confirmPassword": "Nhập lại mật khẩu",
-      "admin": "Quản lý",
-      "active": "Hoạt động",
+      "role": "Vai trò",
+      "status": "Trạng thái",
       "email": "Email",
       "phone": "Số điện thoại",
       "createdTime": "Ngày tạo"
     }
   },
   "dashboard": {
-    "title": "Bảng điều khiển"
+    "title": "Bảng điều khiển",
+    "totalContacts": "Tổng số liên hệ",
+    "totalSalesOrders": "Tổng số đơn hàng",
+    "totalRevenue": "Tổng doanh thu"
   },
   "shared": {
     "modify": "Chỉnh sửa",
     "delete": "Xóa",
-    "deleteSelected": "Xóa các mục đã chọn",
     "edit": "Chỉnh sửa",
     "filters": "Bộ lọc",
     "save": "Lưu",
@@ -81,13 +86,12 @@
     "login": "Đăng nhập",
     "welcome": "Chào mừng đến với CRM",
     "enterCredential": "Vui lòng nhập tên đăng nhập và mật khẩu",
-    "register": "Đăng ký",
     "signout": "Đăng xuất",
     "language": "Ngôn ngữ",
     "actions": "Hành động",
-    "noAccount": "Bạn chưa có tài khoản?",
     "missingValue": "-",
-    "noDataAvailable": "Không có dữ liệu khả dụng",
+    "noDataAvailable": "Không có dữ liệu nào khả dụng.",
+    "copyright": "© 2026 Van Luu",
     "hint": {
       "email": "Ví dụ: abc@gmail.com"
     },
@@ -109,7 +113,8 @@
       "subjectRequired": "*Nội dung là bắt buộc",
       "statusRequired": "*Trạng thái là bắt buộc",
       "totalRequired": "*Tổng số là bắt buộc",
-      "totalInvalid": "*Tổng số phải là chữ số"
+      "totalInvalid": "*Tổng số phải là chữ số",
+      "noSpecialCharacters": "*{{fieldName}} không được chứa ký tự đặc biệt."
     }
   }
 }
