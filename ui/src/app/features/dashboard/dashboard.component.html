@@ -1,65 +1,120 @@
 <div [id]="DASHBOARD_ID.DASHBOARD_MAIN_SECTION">
   <div class="row mx-4 my-3">
     <div class="col-12">
-      <h2 class="float-start">
+      <h2 class="float-start text-primary">
         {{ "dashboard.title" | translate }}
       </h2>
     </div>
-    <div class="col-6">
-      <mat-card
-        appearance="outlined"
-        [id]="DASHBOARD_ID.DASHBOARD_CARD_CONTACT"
-      >
-        <mat-card-header>
-          <mat-card-title-group>
-            <mat-card-title>
-              {{ "contact.title" | translate }}
-            </mat-card-title>
-          </mat-card-title-group>
-        </mat-card-header>
-        <mat-card-content>
-          <div id="contact-chart-wrapper">
-            <canvas
-              #contactChart
-              baseChart
-              class="mx-auto"
-              [type]="'pie'"
-              [datasets]="contactPieChartDatasets"
-              [labels]="contactPieChartLabels"
-              [options]="contactPieChartOptions"
-            >
-            </canvas>
+    <div class="col-12 d-flex flex-column gap-4 mb-3">
+      <div class="d-flex justify-content-start gap-2">
+        <div class="dashboard-card px-3 py-2 navy">
+          <div class="card-left">
+            <div class="card-title">
+              <p>Total contacts</p>
+            </div>
+            <div class="card-value">
+              <h2 class="text-primary">{{ totalContacts }}</h2>
+            </div>
           </div>
-        </mat-card-content>
-      </mat-card>
+          <div class="card-right">
+            <fa-icon [icon]="icon.faUserTag" size="lg" class="me-1"></fa-icon>
+          </div>
+        </div>
+
+        <div class="dashboard-card px-3 py-2 purple">
+          <div class="card-left">
+            <div class="card-title">
+              <p>Total sales orders</p>
+            </div>
+            <div class="card-value">
+              <h2 class="text-primary">{{ totalSalesOrders }}</h2>
+            </div>
+          </div>
+          <div class="card-right">
+            <fa-icon
+              [icon]="icon.faBagShopping"
+              size="lg"
+              class="me-1"
+            ></fa-icon>
+          </div>
+        </div>
+
+        <div class="dashboard-card px-3 py-2 green">
+          <div class="card-left">
+            <div class="card-title">
+              <p>Total revenue (current month)</p>
+            </div>
+            <div class="card-value">
+              <h2 class="text-primary">$ {{ totalRevenue }}</h2>
+            </div>
+          </div>
+          <div class="card-right">
+            <fa-icon
+              [icon]="icon.faHandHoldingDollar"
+              size="lg"
+              class="me-1"
+            ></fa-icon>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="col-6">
-      <mat-card
-        appearance="outlined"
-        [id]="DASHBOARD_ID.DASHBOARD_CARD_SALES_ORDER"
-      >
-        <mat-card-header>
-          <mat-card-title-group>
-            <mat-card-title>
-              {{ "salesOrder.title" | translate }}
-            </mat-card-title>
-          </mat-card-title-group>
-        </mat-card-header>
-        <mat-card-content>
-          <div id="sales-order-chart-wrapper">
-            <canvas
-              #salesOrderChart
-              baseChart
-              class="mx-auto"
-              [type]="'pie'"
-              [datasets]="salesOrderPieChartDatasets"
-              [labels]="salesOrderPieChartLabels"
-              [options]="salesOrderPieChartOptions"
-            >
-            </canvas>
-          </div>
-        </mat-card-content>
-      </mat-card>
+
+    <div class="col-6 mb-3">
+      <div class="dashboard-chart-wrapper" id="contact-chart">
+        <div class="chart-title">
+          <h5>Contacts</h5>
+          <span>
+            Distribution of contacts based on potential customer sources
+          </span>
+        </div>
+        <canvas
+          #contactChart
+          baseChart
+          class="mx-auto w-50 h-50"
+          [type]="'doughnut'"
+          [datasets]="contactPieChartDatasets"
+          [labels]="contactPieChartLabels"
+          [options]="contactPieChartOptions"
+        >
+        </canvas>
+      </div>
+    </div>
+    <div class="col-6 mb-3">
+      <div class="dashboard-chart-wrapper" id="sales-order-chart">
+        <div class="chart-title">
+          <h5>Sales Orders</h5>
+          <span> Distribution of sales orders based on the statuses </span>
+        </div>
+        <canvas
+          #salesOrderChart
+          baseChart
+          class="mx-auto w-50 h-50"
+          [type]="'doughnut'"
+          [datasets]="salesOrderPieChartDatasets"
+          [labels]="salesOrderPieChartLabels"
+          [options]="salesOrderPieChartOptions"
+        >
+        </canvas>
+      </div>
+    </div>
+
+    <div class="col-12 mb-3">
+      <div class="dashboard-chart-wrapper bar-chart">
+        <div class="chart-title">
+          <h5>Monthly Revenue (USD)</h5>
+          <span> Distribution of total revenue by month </span>
+        </div>
+        <canvas
+          width="900"
+          height="600"
+          class="mx-auto"
+          baseChart
+          [datasets]="lineChartData"
+          [labels]="lineChartLabels"
+          [options]="lineChartOptions"
+          [type]="'bar'"
+        ></canvas>
+      </div>
     </div>
   </div>
 </div>

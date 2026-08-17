@@ -12,12 +12,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
-  faAddressBook,
-  faCreditCard,
+  faBagShopping,
   faGauge,
   faGear,
   faListCheck,
   faUsers,
+  faUserTag,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { ProgressSpinnerComponent } from '~shared/components/progress-spinner/progress-spinner.component';
@@ -48,12 +48,12 @@ import { User } from '~features/user/user.interface';
 export class HomeComponent implements OnInit {
   HOME_ID = HOME_ID;
   icon = {
-    faAddressBook,
-    faCreditCard,
+    faBagShopping,
     faGauge,
     faGear,
     faListCheck,
     faUsers,
+    faUserTag,
   };
   currentUser!: User;
   isBrowserRefresh: boolean = false;

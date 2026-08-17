@@ -172,10 +172,15 @@ class ContactController {
         },
       ]).then((data) => {
         logger.info(RESPONSE_MESSAGE.COUNTING_NO_CONTACTS_BY_LEAD_SRC_SUCCESS);
+        const total = data.reduce((sum, item) => sum + item.count, 0);
+        const responseData = {
+          contactCount: data,
+          totalContacts: total,
+        };
         return apiResponse.successResponseWithData(
           res,
           RESPONSE_MESSAGE.COUNTING_NO_CONTACTS_BY_LEAD_SRC_SUCCESS,
-          data,
+          responseData,
         );
       });
     } catch (err) {

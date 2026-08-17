@@ -1,0 +1,67 @@
+@use "../../../styles/base/variables" as *;
+
+.dashboard-card {
+  background-color: $pure-white;
+  border-radius: 10px;
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .card-left {
+    .card-title p,
+    .card-value h2 {
+      margin: 0;
+    }
+    .card-title p {
+      font-size: 15px;
+      color: $black60;
+    }
+    .card-value h2 {
+      font-size: 40px !important;
+    }
+  }
+  .card-right {
+    fa-icon {
+      font-size: 24px !important;
+    }
+  }
+  &.purple {
+    background-color: rgba(70, 71, 174, 0.1);
+    h2,
+    fa-icon {
+      color: $purple !important;
+    }
+  }
+  &.navy {
+    background-color: rgba(53, 88, 114, 0.1);
+    h2,
+    fa-icon {
+      color: $navy !important;
+    }
+  }
+  &.green {
+    background-color: rgba(39, 108, 52, 0.1);
+    h2,
+    fa-icon {
+      color: $success !important;
+    }
+  }
+}
+.dashboard-chart-wrapper {
+  background-color: $pure-white;
+  border-radius: 10px;
+  border: 1px solid $black30;
+  padding: 16px;
+  .chart-title {
+    h5 {
+      font-size: 22px;
+      color: $primary;
+      font-weight: 600;
+    }
+    span {
+      color: $black60;
+      font-size: 15px;
+    }
+  }
+}

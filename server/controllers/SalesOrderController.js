@@ -14,7 +14,7 @@ class SalesOrderController {
         logger.info(RESPONSE_MESSAGE.CREATING_NEW_SALES_ORDER_SUCCESS);
         return apiResponse.successResponse(
           res,
-          RESPONSE_MESSAGE.CREATING_NEW_SALES_ORDER_SUCCESS
+          RESPONSE_MESSAGE.CREATING_NEW_SALES_ORDER_SUCCESS,
         );
       });
     } catch (err) {
@@ -35,12 +35,12 @@ class SalesOrderController {
         return apiResponse.successResponseWithData(
           res,
           RESPONSE_MESSAGE.FETCHING_LIST_OF_SALES_ORDER_SUCCESS,
-          resData
+          resData,
         );
       });
     } catch (err) {
       logger.error(
-        `${RESPONSE_MESSAGE.FETCHING_LIST_OF_SALES_ORDER_ERROR} ${err}`
+        `${RESPONSE_MESSAGE.FETCHING_LIST_OF_SALES_ORDER_ERROR} ${err}`,
       );
       return apiResponse.ErrorResponse(res, err);
     }
@@ -55,7 +55,7 @@ class SalesOrderController {
         return apiResponse.successResponseWithData(
           res,
           RESPONSE_MESSAGE.FETCHING_SALES_ORDER_SUCCESS,
-          data
+          data,
         );
       });
     } catch (err) {
@@ -73,7 +73,7 @@ class SalesOrderController {
         logger.info(RESPONSE_MESSAGE.UPDATING_SALES_ORDER_SUCCESS);
         return apiResponse.successResponse(
           res,
-          RESPONSE_MESSAGE.UPDATING_SALES_ORDER_SUCCESS
+          RESPONSE_MESSAGE.UPDATING_SALES_ORDER_SUCCESS,
         );
       });
     } catch (err) {
@@ -90,7 +90,7 @@ class SalesOrderController {
         logger.info(RESPONSE_MESSAGE.DELETING_SALES_ORDER_SUCCESS);
         return apiResponse.successResponse(
           res,
-          RESPONSE_MESSAGE.DELETING_SALES_ORDER_SUCCESS
+          RESPONSE_MESSAGE.DELETING_SALES_ORDER_SUCCESS,
         );
       });
     } catch (err) {
@@ -107,12 +107,12 @@ class SalesOrderController {
         logger.info(RESPONSE_MESSAGE.DELETING_LIST_OF_SALES_ORDERS_SUCCESS);
         return apiResponse.successResponse(
           res,
-          RESPONSE_MESSAGE.DELETING_LIST_OF_SALES_ORDERS_SUCCESS
+          RESPONSE_MESSAGE.DELETING_LIST_OF_SALES_ORDERS_SUCCESS,
         );
       });
     } catch (err) {
       logger.error(
-        `${RESPONSE_MESSAGE.DELETING_LIST_OF_SALES_ORDERS_ERROR} ${err}`
+        `${RESPONSE_MESSAGE.DELETING_LIST_OF_SALES_ORDERS_ERROR} ${err}`,
       );
       return apiResponse.ErrorResponse(res, err);
     }
@@ -127,7 +127,7 @@ class SalesOrderController {
         return apiResponse.successResponseWithData(
           res,
           RESPONSE_MESSAGE.FINDING_SALES_ORDER_SUCCESS,
-          data
+          data,
         );
       });
     } catch (err) {
@@ -141,24 +141,44 @@ class SalesOrderController {
       logger.info(RESPONSE_MESSAGE.COUNTING_NO_SALES_ORDERS_BY_STATUS);
       SalesOrder.aggregate([
         {
-          $group: {
-            _id: "$status",
-            count: { $sum: 1 },
+          $facet: {
+            salesOrderCount: [
+              {
+                $group: {
+                  _id: "$status",
+                  count: { $sum: 1 },
+                },
+              },
+            ],
+            summary: [
+              {
+                $group: { _id: null, totalSum: { $sum: { $toInt: "$total" } } },
+              },
+            ],
           },
         },
       ]).then((data) => {
         logger.info(
-          RESPONSE_MESSAGE.COUNTING_NO_SALES_ORDERS_BY_STATUS_SUCCESS
+          RESPONSE_MESSAGE.COUNTING_NO_SALES_ORDERS_BY_STATUS_SUCCESS,
         );
+        const total = data[0].salesOrderCount.reduce(
+          (sum, item) => sum + item.count,
+          0,
+        );
+        const responseData = {
+          salesOrderCount: data[0].salesOrderCount,
+          totalSalesOrders: total,
+          totalRevenue: data[0].summary[0].totalSum,
+        };
         return apiResponse.successResponseWithData(
           res,
           RESPONSE_MESSAGE.COUNTING_NO_SALES_ORDERS_BY_STATUS_SUCCESS,
-          data
+          responseData,
         );
       });
     } catch (err) {
       logger.error(
-        `${RESPONSE_MESSAGE.COUNTING_NO_SALES_ORDERS_BY_STATUS_ERROR} ${err}`
+        `${RESPONSE_MESSAGE.COUNTING_NO_SALES_ORDERS_BY_STATUS_ERROR} ${err}`,
       );
       return apiResponse.ErrorResponse(res, err);
     }
