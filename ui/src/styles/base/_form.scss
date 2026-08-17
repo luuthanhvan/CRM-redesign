@@ -10,6 +10,8 @@
   --mat-form-field-container-vertical-padding: 14px;
   .mdc-floating-label {
     font-size: 14px !important;
+    margin-top: 8px !important;
+    color: $black60 !important;
   }
   .mat-mdc-form-field-error-wrapper {
     padding: 0;
@@ -20,6 +22,9 @@
   .mat-mdc-form-field-hint-wrapper {
     padding: 0;
   }
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
 }
 .mdc-text-field--outlined:not(.mdc-text-field--disabled)
   .mdc-notched-outline__leading,
@@ -29,7 +34,50 @@
   .mdc-notched-outline__trailing {
   border-color: $black30 !important;
 }
-
+.mat-mdc-form-field-type-mat-select {
+  .mat-mdc-text-field-wrapper {
+    background-color: $daisy-white !important;
+    border: 1px solid $black30;
+    border-radius: 8px !important;
+    .mdc-line-ripple {
+      display: none;
+    }
+    .mat-mdc-form-field-flex {
+      height: 48px;
+    }
+  }
+}
+/* Overrides the fixed width bound to the overlay panel */
+.cdk-overlay-pane:has(> .mat-mdc-select-panel) {
+  width: auto !important;
+  min-width: fit-content;
+}
+.mat-mdc-select-panel {
+  margin-top: 6px;
+  border-radius: 8px !important;
+  background-color: $daisy-white !important;
+  width: 300px !important;
+  padding: 8px 4px !important;
+  /* For Chrome, Safari, Edge, and Opera */
+  &::-webkit-scrollbar {
+    display: none !important;
+  }
+  /* For Firefox */
+  scrollbar-width: none !important;
+  /* For Internet Explorer and Legacy Edge */
+  -ms-overflow-style: none !important;
+  .mat-mdc-option {
+    margin: 4px 0 !important;
+  }
+  .mat-mdc-option:hover:not(.mdc-list-item--disabled) {
+    background-color: $grey-3;
+    border-radius: 8px;
+  }
+  .mat-mdc-option.mat-mdc-option-active.mdc-list-item {
+    background-color: $grey-3;
+    border-radius: 8px;
+  }
+}
 .search-field {
   height: 48px;
   .mat-mdc-text-field-wrapper {

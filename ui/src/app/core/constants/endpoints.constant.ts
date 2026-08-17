@@ -12,6 +12,7 @@ export const ENDPOINTS = {
     contactNameList: `${environment.apiBaseUrl}/v1/contact/list/contact-name`,
     countContact: `${environment.apiBaseUrl}/v1/contact/count`,
     searchContact: `${environment.apiBaseUrl}/v1/contact/search`,
+    exportAllContacts: `${environment.apiBaseUrl}/v1/contact/export/all`,
   },
   salesOrder: {
     bulkDeleteSalesOrders: `${environment.apiBaseUrl}/v1/sales-order/delete`,

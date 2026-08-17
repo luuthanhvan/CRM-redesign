@@ -88,11 +88,12 @@ body {
   color: $daisy-white !important;
 }
 .btn-secondary {
-  background-color: $pure-white !important;
+  background-color: $daisy-white !important;
   color: $primary !important;
   border: 1px solid $black30 !important;
+  font-weight: 600 !important;
   &:hover {
-    background-color: $daisy-white !important;
+    background-color: $grey-3 !important;
   }
 }
 .btn-tertiary {

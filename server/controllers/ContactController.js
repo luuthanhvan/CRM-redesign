@@ -1,10 +1,11 @@
 const Contacts = require("../models/Contact");
-const { mutipleMongooseToObject } = require("../ultils/mongoose");
-const apiResponse = require("../ultils/apiResponse");
-const logger = require("../configs/winston");
-const { RESPONSE_MESSAGE } = require("../ultils/constants");
 const _ = require("lodash");
+const apiResponse = require("../ultils/apiResponse");
 const contactService = require("../services/ContactService");
+const logger = require("../configs/winston");
+const { Parser } = require("json2csv");
+const { RESPONSE_MESSAGE } = require("../ultils/constants");
+const { mutipleMongooseToObject } = require("../ultils/mongoose");
 
 class ContactController {
   storeContact(req, res) {
@@ -15,7 +16,7 @@ class ContactController {
         logger.info(RESPONSE_MESSAGE.CREATING_NEW_CONTACT_SUCCESS);
         return apiResponse.successResponse(
           res,
-          RESPONSE_MESSAGE.CREATING_NEW_CONTACT_SUCCESS
+          RESPONSE_MESSAGE.CREATING_NEW_CONTACT_SUCCESS,
         );
       });
     } catch (err) {
@@ -36,12 +37,12 @@ class ContactController {
         return apiResponse.successResponseWithData(
           res,
           RESPONSE_MESSAGE.FETCHING_LIST_OF_CONTACTS_SUCCESS,
-          resData
+          resData,
         );
       });
     } catch (err) {
       logger.error(
-        `${RESPONSE_MESSAGE.FETCHING_LIST_OF_CONTACTS_ERROR} ${err}`
+        `${RESPONSE_MESSAGE.FETCHING_LIST_OF_CONTACTS_ERROR} ${err}`,
       );
       return apiResponse.ErrorResponse(res, err);
     }
@@ -58,12 +59,12 @@ class ContactController {
         return apiResponse.successResponseWithData(
           res,
           RESPONSE_MESSAGE.FETCHING_LIST_OF_CONTACT_NAMES_SUCCESS,
-          names
+          names,
         );
       });
     } catch (err) {
       logger.error(
-        `${RESPONSE_MESSAGE.FETCHING_LIST_OF_CONTACT_NAMES_ERROR} ${err}`
+        `${RESPONSE_MESSAGE.FETCHING_LIST_OF_CONTACT_NAMES_ERROR} ${err}`,
       );
       return apiResponse.ErrorResponse(res, err);
     }
@@ -78,7 +79,7 @@ class ContactController {
         return apiResponse.successResponseWithData(
           res,
           RESPONSE_MESSAGE.FETCHING_CONTACT_SUCCESS,
-          contact
+          contact,
         );
       });
     } catch (err) {
@@ -96,7 +97,7 @@ class ContactController {
         logger.info(RESPONSE_MESSAGE.UPDATING_CONTACT_SUCCESS);
         return apiResponse.successResponse(
           res,
-          RESPONSE_MESSAGE.UPDATING_CONTACT_SUCCESS
+          RESPONSE_MESSAGE.UPDATING_CONTACT_SUCCESS,
         );
       });
     } catch (err) {
@@ -113,7 +114,7 @@ class ContactController {
         logger.info(RESPONSE_MESSAGE.DELETING_CONTACT_SUCCESS);
         return apiResponse.successResponse(
           res,
-          RESPONSE_MESSAGE.DELETING_CONTACT_SUCCESS
+          RESPONSE_MESSAGE.DELETING_CONTACT_SUCCESS,
         );
       });
     } catch (err) {
@@ -130,12 +131,12 @@ class ContactController {
         logger.info(RESPONSE_MESSAGE.DELETING_LIST_OF_CONTACTS_SUCCESS);
         return apiResponse.successResponse(
           res,
-          RESPONSE_MESSAGE.DELETING_LIST_OF_CONTACTS_SUCCESS
+          RESPONSE_MESSAGE.DELETING_LIST_OF_CONTACTS_SUCCESS,
         );
       });
     } catch (err) {
       logger.error(
-        `${RESPONSE_MESSAGE.DELETING_LIST_OF_CONTACTS_ERROR} ${err}`
+        `${RESPONSE_MESSAGE.DELETING_LIST_OF_CONTACTS_ERROR} ${err}`,
       );
       return apiResponse.ErrorResponse(res, err);
     }
@@ -150,7 +151,7 @@ class ContactController {
         return apiResponse.successResponseWithData(
           res,
           RESPONSE_MESSAGE.FINDING_CONTACT_SUCCESS,
-          data
+          data,
         );
       });
     } catch (err) {
@@ -174,14 +175,41 @@ class ContactController {
         return apiResponse.successResponseWithData(
           res,
           RESPONSE_MESSAGE.COUNTING_NO_CONTACTS_BY_LEAD_SRC_SUCCESS,
-          data
+          data,
         );
       });
     } catch (err) {
       logger.error(
-        `${RESPONSE_MESSAGE.COUNTING_NO_CONTACTS_BY_LEAD_SRC_ERROR} ${err}`
+        `${RESPONSE_MESSAGE.COUNTING_NO_CONTACTS_BY_LEAD_SRC_ERROR} ${err}`,
       );
       return apiResponse.ErrorResponse(res, err);
+    }
+  }
+
+  exportAllContacts(req, res) {
+    // Sample data source (usually fetched from a database)
+    const reportData = [
+      { id: 1, name: "John Doe", email: "john@example.com", role: "Admin" },
+      { id: 2, name: "Jane Smith", email: "jane@example.com", role: "User" },
+      { id: 3, name: "Bob Johnson", email: "bob@example.com", role: "Editor" },
+    ];
+    try {
+      const fields = ["id", "name", "email", "role"];
+      const json2csvParser = new Parser({ fields });
+      const csvData = json2csvParser.parse(reportData);
+
+      // Set HTTP headers for file transmission
+      res.setHeader("Content-Type", "text/csv");
+      res.setHeader(
+        "Content-Disposition",
+        "attachment; filename=user_report.csv",
+      );
+
+      return res.status(200).send(csvData);
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ message: "Error generating report", error });
     }
   }
 }

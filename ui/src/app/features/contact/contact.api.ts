@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { map, shareReplay, takeUntil } from 'rxjs/operators';
@@ -12,6 +13,7 @@ import type { Contact } from './contact.interface';
   providedIn: 'root',
 })
 export class ContactApi {
+  private readonly http = inject(HttpClient);
   private readonly apiService = inject(ApiService);
   private stop$: Subject<void> = new Subject<void>();
 
@@ -115,5 +117,9 @@ export class ContactApi {
     return this.apiService
       .put(`${ENDPOINTS.contact.contact}/${id}`, contact)
       .pipe(takeUntil(this.stop$));
+  }
+
+  exportAllContacts() {
+    return this.http.get(ENDPOINTS.contact.exportAllContacts, { responseType: 'blob' });
   }
 }

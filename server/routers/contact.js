@@ -9,36 +9,41 @@ router.get(
   "/list",
   jwtHelper.verifyJwtToken,
   authController.verifyUser,
-  contactController.getListOfContacts
+  contactController.getListOfContacts,
 );
 router.get(
   "/search",
   jwtHelper.verifyJwtToken,
   authController.verifyUser,
-  contactController.findContacts
+  contactController.findContacts,
 );
 router.get(
   "/count/lead-source",
   jwtHelper.verifyJwtToken,
-  contactController.countNoContactsByLeadSrc
+  contactController.countNoContactsByLeadSrc,
 );
 router.post(
   "/delete",
   jwtHelper.verifyJwtToken,
-  contactController.multiDeleteContacts
+  contactController.multiDeleteContacts,
 );
 router.get(
   "/list/contact-name",
   jwtHelper.verifyJwtToken,
   authController.verifyUser,
-  contactController.getListOfContactNames
+  contactController.getListOfContactNames,
 );
 router.get("/:id", jwtHelper.verifyJwtToken, contactController.getContact);
 router.put("/:id", jwtHelper.verifyJwtToken, contactController.updateContact);
 router.delete(
   "/:id",
   jwtHelper.verifyJwtToken,
-  contactController.deleteContact
+  contactController.deleteContact,
+);
+router.get(
+  "/export/all",
+  jwtHelper.verifyJwtToken,
+  contactController.exportAllContacts,
 );
 
 module.exports = router;

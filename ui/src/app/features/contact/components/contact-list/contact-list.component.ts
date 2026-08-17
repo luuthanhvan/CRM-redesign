@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable, combineLatest, of } from 'rxjs';
 import {
   debounceTime,
@@ -25,6 +25,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
+  faDownload,
   faMagnifyingGlass,
   faPencil,
   faPlus,
@@ -36,6 +37,8 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { DialogComponent } from '~shared/components/dialog/dialog.component';
 import { NoDataFoundComponent } from '~shared/components/no-data-found/no-data-found.component';
+
+import { CommonService } from '~shared/services/common.service';
 import { ToastService } from '~shared/services/toast.service';
 
 import { CONTACT_ID } from '~features/contact/contact.constant';
@@ -70,8 +73,8 @@ import { ContactService } from '~features/contact/contact.service';
 })
 export class ContactListComponent implements OnInit {
   @ViewChild(MatPaginator) contactPaginator!: MatPaginator;
+  private commonService = inject(CommonService);
   private contactApi = inject(ContactApi);
-  private route = inject(ActivatedRoute);
   private router = inject(Router);
   private toastService = inject(ToastService);
   public dialog = inject(MatDialog);
@@ -88,6 +91,7 @@ export class ContactListComponent implements OnInit {
     'assignedTo',
   ];
   icon = {
+    faDownload,
     faMagnifyingGlass,
     faPencil,
     faPlus,
@@ -98,6 +102,7 @@ export class ContactListComponent implements OnInit {
   totalRecords: number = 0;
   contactIdsChecked: string[] = [];
   leadSourceList: string[] = [];
+  selectedLeadSrc: string[] = [];
   searchText: FormControl = new FormControl('');
   leadSource: FormControl = new FormControl('');
   search$!: Observable<Contact[] | undefined>;
@@ -139,6 +144,9 @@ export class ContactListComponent implements OnInit {
         contactName
           ? this.contactApi.searchContacts({
               contactName,
+              ...(this.selectedLeadSrc.length > 0 && {
+                leadSource: this.selectedLeadSrc.toString(),
+              }),
             })
           : of(undefined),
       ),
@@ -275,10 +283,13 @@ export class ContactListComponent implements OnInit {
   }
 
   onLeadSrcChange(event: MatSelectChange) {
+    this.selectedLeadSrc = event.value;
     this.contactApi
       .searchContacts({
-        contactName: this.searchText.value,
-        leadSource: event.value.toString(),
+        ...(this.searchText.value !== '' && {
+          contactName: this.searchText.value,
+        }),
+        leadSource: this.selectedLeadSrc.toString(),
       })
       .subscribe((contactData) => {
         if (contactData) {
@@ -290,6 +301,17 @@ export class ContactListComponent implements OnInit {
   navigateToSubScreen(screen: string, data: {}) {
     this.router.navigate([screen], {
       state: data,
+    });
+  }
+
+  onDownloadAllContacts() {
+    this.contactApi.exportAllContacts().subscribe({
+      next: (blobData: Blob) => {
+        this.commonService.downloadReport(blobData, 'contact_details_all.csv');
+      },
+      error: () => {
+        this.toastService.showErrorMessage('Cannot download the report file!');
+      },
     });
   }
 }
