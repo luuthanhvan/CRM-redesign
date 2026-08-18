@@ -23,6 +23,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { TranslateModule } from '@ngx-translate/core';
 
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faPencil, faPlus } from '@fortawesome/free-solid-svg-icons';
+
 import { tap } from 'rxjs/operators';
 
 import { ToastService } from '~shared/services/toast.service';
@@ -37,6 +40,7 @@ import { User } from '~features/user/user.interface';
   selector: 'app-user-form',
   imports: [
     CommonModule,
+    FontAwesomeModule,
     FormsModule,
     MatButton,
     MatCheckboxModule,
@@ -56,8 +60,13 @@ export class UserFormComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
   private toastService = inject(ToastService);
   private userService = inject(UserService);
-  USER_ID = USER_ID;
   data = inject(MAT_DIALOG_DATA);
+
+  USER_ID = USER_ID;
+  icon = {
+    faPencil,
+    faPlus,
+  };
   userForm!: FormGroup;
 
   ngOnInit(): void {
@@ -123,16 +132,16 @@ export class UserFormComponent implements OnInit {
             if (response.isSuccess()) {
               this.toastService.showSuccessMessage(
                 'Add new User!',
-                this.USER_ID.TOAST_ADD_SUCCESS
+                this.USER_ID.TOAST_ADD_SUCCESS,
               );
               this.dialogRef.close();
             } else {
               this.toastService.showErrorMessage(
                 'Add new User!',
-                this.USER_ID.TOAST_ADD_FAILED
+                this.USER_ID.TOAST_ADD_FAILED,
               );
             }
-          })
+          }),
         )
         .subscribe();
     } else {
@@ -143,16 +152,16 @@ export class UserFormComponent implements OnInit {
             if (response.isSuccess()) {
               this.toastService.showSuccessMessage(
                 'Update the User!',
-                this.USER_ID.TOAST_UPDATE_SUCCESS
+                this.USER_ID.TOAST_UPDATE_SUCCESS,
               );
               this.dialogRef.close();
             } else {
               this.toastService.showErrorMessage(
                 'Update new User!',
-                this.USER_ID.TOAST_UPDATE_FAILED
+                this.USER_ID.TOAST_UPDATE_FAILED,
               );
             }
-          })
+          }),
         )
         .subscribe();
     }

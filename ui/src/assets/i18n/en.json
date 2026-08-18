@@ -50,6 +50,8 @@
     "createNewUser": "Add User",
     "editUserInfo": "Edit User",
     "userDetails": "User Details",
+    "isAdmin": "Admin access",
+    "active": "Activate account",
     "table": {
       "name": "Full Name",
       "username": "Username",

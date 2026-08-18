@@ -3,11 +3,11 @@ import { AuthGuard } from '~core/guards/auth.guard';
 
 import { contactRoutes } from '~features/contact/contact.routes';
 import { salesOrderRoutes } from '~features/sales-order/sales-order.routes';
+import { userRoutes } from '~features/user/user.routes';
 
 import { DashboardComponent } from '~features/dashboard/dashboard.component';
 import { HomeComponent } from '~core/layout/home/home.component';
 import { LoginComponent } from '~features/authentication/pages/login/login.component';
-import { UserComponent } from '~features/user/user.component';
 
 export const appRoutes: Routes = [
   {
@@ -21,7 +21,7 @@ export const appRoutes: Routes = [
         children: contactRoutes,
       },
       { path: 'sales-order', children: salesOrderRoutes },
-      { path: 'user', component: UserComponent },
+      { path: 'user', children: userRoutes },
     ],
   },
   {

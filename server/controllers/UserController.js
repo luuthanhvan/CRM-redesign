@@ -123,8 +123,9 @@ class UserController {
       logger.info(RESPONSE_MESSAGE.CHANGING_USER_PASSWORD);
       let userId = req.params.id,
         newPass = req.body.newPass;
-
-      User.findByIdAndUpdate({ _id: userId }, { password: newPass }).then(
+      
+      hashingPwd(newPass).then(async (hashedPass) => {
+        User.findByIdAndUpdate({ _id: userId }, { password: hashedPass }).then(
         () => {
           logger.info(RESPONSE_MESSAGE.CHANGING_USER_PASSWORD_SUCCESS);
           return apiResponse.successResponse(
@@ -133,6 +134,7 @@ class UserController {
           );
         }
       );
+      });
     } catch (err) {
       logger.info(`${RESPONSE_MESSAGE.CHANGING_USER_PASSWORD_ERROR} ${err}`);
       return apiResponse.ErrorResponse(res, err);

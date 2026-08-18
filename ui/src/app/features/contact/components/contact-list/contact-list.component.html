@@ -5,7 +5,7 @@
     </h2>
   </div>
   <div class="col-12 mb-3">
-    <div class="float-start search-field">
+    <div class="float-start form-search">
       <mat-form-field appearance="outline" [id]="CONTACT_ID.INPUT_SEARCH">
         <fa-icon
           [icon]="icon.faMagnifyingGlass"
@@ -33,7 +33,7 @@
       class="float-end d-flex align-items-center gap-2"
       *ngIf="currentUserInfo && currentUserInfo['isAdmin']"
     >
-      <mat-form-field>
+      <mat-form-field class="form-filter">
         <mat-label>Filtering by Lead Source</mat-label>
         <mat-select
           [formControl]="leadSource"

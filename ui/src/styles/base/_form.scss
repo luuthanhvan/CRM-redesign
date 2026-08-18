@@ -22,9 +22,6 @@
   .mat-mdc-form-field-hint-wrapper {
     padding: 0;
   }
-  .mat-mdc-form-field-subscript-wrapper {
-    display: none;
-  }
 }
 .mdc-text-field--outlined:not(.mdc-text-field--disabled)
   .mdc-notched-outline__leading,
@@ -78,7 +75,7 @@
     border-radius: 8px;
   }
 }
-.search-field {
+.form-search {
   height: 48px;
   .mat-mdc-text-field-wrapper {
     border-radius: 10px !important;
@@ -110,5 +107,10 @@
     &:hover {
       background-color: $black30;
     }
+  }
+}
+.form-filter {
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none;
   }
 }

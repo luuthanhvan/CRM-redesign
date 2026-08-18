@@ -1,145 +1,188 @@
-<div [id]="USER_ID.USER_DIALOG">
-  <h2 mat-dialog-title>
-    {{ "user.createNewUser" | translate }}
+<div [id]="USER_ID.USER_DIALOG" class="card-dialog">
+  <h2 mat-dialog-title class="card-header d-flex align-items-center mt-2">
+    <div>
+      @if (this.data.action === "add") {
+        <fa-icon [icon]="icon.faPlus" size="lg" class="me-2"></fa-icon>
+      } @else {
+        <fa-icon [icon]="icon.faPencil" size="lg" class="me-2"></fa-icon>
+      }
+    </div>
+    {{
+      this.data.action === "add"
+        ? ("user.createNewUser" | translate)
+        : ("user.editUserInfo" | translate)
+    }}
   </h2>
-  <mat-dialog-content>
+  <mat-dialog-content class="card-content">
     <form
+      [id]="
+        this.data.action === 'add'
+          ? USER_ID.USER_FORM_CREATE
+          : USER_ID.USER_FORM_EDIT
+      "
       class="mx-3 my-4"
       [formGroup]="userForm"
-      [id]="USER_ID.USER_FORM_CREATE"
     >
       <div class="row">
-        <mat-form-field class="col-6" appearance="outline">
-          <mat-label>
+        <div class="col-6">
+          <h5>
             {{ "user.table.name" | translate }}
-          </mat-label>
-          <input matInput formControlName="name" />
-          @if (userForm.controls["name"].errors?.["required"]) {
-            <mat-error>
-              {{ "shared.error.nameRequired" | translate }}
-            </mat-error>
-          }
-          @if (userForm.controls["name"].errors?.["noSpecialCharacters"]) {
-            <mat-error>
-              {{
-                "shared.error.noSpecialCharacters"
-                  | translate
-                    : {
-                        fieldName: ("user.table.name" | translate),
-                      }
-              }}
-            </mat-error>
-          }
-        </mat-form-field>
-        <mat-form-field class="col-6" appearance="outline">
-          <mat-label>
+            <span class="text-danger">*</span>
+          </h5>
+          <mat-form-field appearance="outline" class="w-100">
+            <input matInput formControlName="name" />
+            @if (userForm.controls["name"].errors?.["required"]) {
+              <mat-error>
+                {{ "shared.error.nameRequired" | translate }}
+              </mat-error>
+            }
+            @if (userForm.controls["name"].errors?.["noSpecialCharacters"]) {
+              <mat-error>
+                {{
+                  "shared.error.noSpecialCharacters"
+                    | translate
+                      : {
+                          fieldName: ("user.table.name" | translate),
+                        }
+                }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="col-6">
+          <h5>
             {{ "user.table.username" | translate }}
-          </mat-label>
-          <input matInput formControlName="username" />
-          @if (userForm.controls["username"].errors?.["required"]) {
-            <mat-error>
-              {{ "shared.error.usernameRequired" | translate }}
-            </mat-error>
-          }
-        </mat-form-field>
+            <span class="text-danger">*</span>
+          </h5>
+          <mat-form-field appearance="outline" class="w-100">
+            <input matInput formControlName="username" />
+            @if (userForm.controls["username"].errors?.["required"]) {
+              <mat-error>
+                {{ "shared.error.usernameRequired" | translate }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
       </div>
 
       <div class="row my-3">
-        <mat-form-field class="col-6" appearance="outline">
-          <mat-label>
+        <div class="col-6">
+          <h5>
             {{ "user.table.password" | translate }}
-          </mat-label>
-          <input matInput type="password" formControlName="password" />
-          @if (
-            userForm.invalid &&
-            userForm.controls["password"].errors?.["required"]
-          ) {
-            <mat-error>
-              {{ "shared.error.passwordRequired" | translate }}
-            </mat-error>
-          }
-          @if (userForm.controls["password"].errors?.["minlength"]) {
-            <mat-error>
-              {{ "shared.error.passwordMinLength" | translate }}
-            </mat-error>
-          }
-        </mat-form-field>
-        <mat-form-field class="col-6" appearance="outline">
-          <mat-label>
+            <span class="text-danger">*</span>
+          </h5>
+          <mat-form-field appearance="outline" class="w-100">
+            <input matInput type="password" formControlName="password" />
+            @if (
+              userForm.invalid &&
+              userForm.controls["password"].errors?.["required"]
+            ) {
+              <mat-error>
+                {{ "shared.error.passwordRequired" | translate }}
+              </mat-error>
+            }
+            @if (userForm.controls["password"].errors?.["minlength"]) {
+              <mat-error>
+                {{ "shared.error.passwordMinLength" | translate }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="col-6">
+          <h5>
             {{ "user.table.confirmPassword" | translate }}
-          </mat-label>
-          <input matInput type="password" formControlName="confirmPassword" />
-          @if (userForm.controls["confirmPassword"].errors?.["required"]) {
-            <mat-error>
-              {{ "shared.error.confirmPasswordRequired" | translate }}
-            </mat-error>
-          }
-          @if (userForm.controls["confirmPassword"].errors?.["matching"]) {
-            <mat-error>
-              {{ "shared.error.passwordsMustMatch" | translate }}
-            </mat-error>
-          }
-        </mat-form-field>
+            <span class="text-danger">*</span>
+          </h5>
+          <mat-form-field appearance="outline" class="w-100">
+            <input matInput type="password" formControlName="confirmPassword" />
+            @if (userForm.controls["confirmPassword"].errors?.["required"]) {
+              <mat-error>
+                {{ "shared.error.confirmPasswordRequired" | translate }}
+              </mat-error>
+            }
+            @if (userForm.controls["confirmPassword"].errors?.["matching"]) {
+              <mat-error>
+                {{ "shared.error.passwordsMustMatch" | translate }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
       </div>
 
       <div class="row my-3">
-        <mat-form-field class="col-6" appearance="outline">
-          <mat-label>
+        <div class="col-6">
+          <h5>
             {{ "user.table.email" | translate }}
-          </mat-label>
-          <input matInput formControlName="email" />
-          <mat-hint>
-            {{ "shared.hint.email" | translate }}
-          </mat-hint>
-          @if (userForm.controls["email"].errors?.["required"]) {
-            <mat-error>
-              {{ "shared.error.emailRequired" | translate }}
-            </mat-error>
-          }
-          @if (userForm.controls["email"].errors?.["email"]) {
-            <mat-error>
-              {{ "shared.error.emailInvalid" | translate }}
-            </mat-error>
-          }
-        </mat-form-field>
-        <mat-form-field class="col-6" appearance="outline">
-          <mat-label>
+            <span class="text-danger">*</span>
+          </h5>
+          <mat-form-field appearance="outline" class="w-100">
+            <input matInput formControlName="email" />
+            <mat-hint>
+              {{ "shared.hint.email" | translate }}
+            </mat-hint>
+            @if (userForm.controls["email"].errors?.["required"]) {
+              <mat-error>
+                {{ "shared.error.emailRequired" | translate }}
+              </mat-error>
+            }
+            @if (userForm.controls["email"].errors?.["email"]) {
+              <mat-error>
+                {{ "shared.error.emailInvalid" | translate }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="col-6">
+          <h5>
             {{ "user.table.phone" | translate }}
-          </mat-label>
-          <input matInput formControlName="phone" />
-          @if (userForm.controls["phone"].errors?.["required"]) {
-            <mat-error>
-              {{ "shared.error.phoneRequired" | translate }}
-            </mat-error>
-          }
-          @if (userForm.controls["phone"].errors?.["pattern"]) {
-            <mat-error>
-              {{ "shared.error.phoneInvalid" | translate }}
-            </mat-error>
-          }
-        </mat-form-field>
+            <span class="text-danger">*</span>
+          </h5>
+          <mat-form-field appearance="outline" class="w-100">
+            <input matInput formControlName="phone" />
+            @if (userForm.controls["phone"].errors?.["required"]) {
+              <mat-error>
+                {{ "shared.error.phoneRequired" | translate }}
+              </mat-error>
+            }
+            @if (userForm.controls["phone"].errors?.["pattern"]) {
+              <mat-error>
+                {{ "shared.error.phoneInvalid" | translate }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
       </div>
 
-      <div class="row my-3 d-flex align-items-center">
-        <mat-checkbox class="col-2" formControlName="isAdmin">
-          {{ "user.table.role" | translate }}
+      <div class="row my-3">
+        <mat-checkbox class="col-3" formControlName="isAdmin">
+          <span class="small-text">{{ "user.isAdmin" | translate }}</span>
         </mat-checkbox>
-        <mat-slide-toggle class="col-2 mx-4" formControlName="isActive">
-          {{ "user.table.status" | translate }}
+        <mat-slide-toggle class="col-3 my-auto" formControlName="isActive">
+          <span class="small-text">{{ "user.active" | translate }}</span>
         </mat-slide-toggle>
       </div>
     </form>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close [id]="USER_ID.BUTTON_CANCEL">
+    <button
+      mat-button
+      mat-dialog-close
+      class="btn-secondary"
+      [disableRipple]="true"
+      [id]="USER_ID.BUTTON_CANCEL"
+    >
       {{ "shared.cancel" | translate }}
     </button>
     <button
       mat-button
-      cdkFocusInitial
-      (click)="!userForm.invalid && onSubmit()"
-      [ngClass]="userForm.invalid ? 'btn-disabled' : 'btn-primary'"
+      [disableRipple]="true"
+      [disabled]="userForm.invalid"
       [id]="USER_ID.BUTTON_SUBMIT"
+      [ngClass]="userForm.invalid ? 'btn-disabled' : 'btn-primary'"
+      (click)="!userForm.invalid && onSubmit()"
     >
       {{ "shared.submit" | translate }}
     </button>

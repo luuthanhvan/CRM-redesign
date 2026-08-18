@@ -50,6 +50,8 @@
     "createNewUser": "Tạo mới thông tin nhân viên",
     "editUserInfo": "Chỉnh sửa thông tin nhân viên",
     "userDetails": "Chi tiết thông tin nhân viên",
+    "isAdmin": "Quyền quản trị",
+    "active": "Kích hoạt tài khoản",
     "table": {
       "name": "Họ tên",
       "username": "Tên đăng nhập",
