@@ -75,6 +75,33 @@
     border-radius: 8px;
   }
 }
+
+.mat-mdc-menu-panel {
+  margin-top: 6px;
+  border-radius: 8px !important;
+  background-color: $daisy-white !important;
+  width: 200px !important;
+  padding: 8px 4px !important;
+  /* For Chrome, Safari, Edge, and Opera */
+  &::-webkit-scrollbar {
+    display: none !important;
+  }
+  /* For Firefox */
+  scrollbar-width: none !important;
+  /* For Internet Explorer and Legacy Edge */
+  -ms-overflow-style: none !important;
+  .mat-mdc-menu-item {
+    margin: 4px 0 !important;
+  }
+  .mat-mdc-menu-item:hover:not(.mdc-list-item--disabled) {
+    background-color: $grey-3;
+    border-radius: 8px;
+  }
+  .mat-mdc-menu-item:not([disabled]).mat-mdc-menu-item-highlighted {
+    background-color: $grey-2;
+    border-radius: 8px;
+  }
+}
 .form-search {
   height: 48px;
   .mat-mdc-text-field-wrapper {
