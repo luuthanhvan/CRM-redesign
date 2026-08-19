@@ -70,10 +70,15 @@
         <div class="col-6">
           <h5>
             {{ "user.table.password" | translate }}
-            <span class="text-danger">*</span>
+            @if (data.action === "add") {
+              <span class="text-danger">*</span>
+            }
           </h5>
           <mat-form-field appearance="outline" class="w-100">
             <input matInput type="password" formControlName="password" />
+            <!-- <mat-hint>
+              {{ "shared.hint.password" | translate }}
+            </mat-hint> -->
             @if (
               userForm.invalid &&
               userForm.controls["password"].errors?.["required"]
@@ -93,7 +98,9 @@
         <div class="col-6">
           <h5>
             {{ "user.table.confirmPassword" | translate }}
-            <span class="text-danger">*</span>
+            @if (data.action === "add") {
+              <span class="text-danger">*</span>
+            }
           </h5>
           <mat-form-field appearance="outline" class="w-100">
             <input matInput type="password" formControlName="confirmPassword" />

@@ -21,6 +21,7 @@ import {
   withInterceptors,
 } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { appRoutes } from './app.routes';
 /* Internationalization (i18n) */
 import { TranslateLoader, provideTranslateService } from '@ngx-translate/core'; // provides the core translation service, pipes, and directives.
@@ -61,11 +62,11 @@ export const appConfig: ApplicationConfig = {
         paramsInheritanceStrategy: 'always',
         onSameUrlNavigation: 'reload',
       }),
-      withPreloading(PreloadAllModules)
+      withPreloading(PreloadAllModules),
     ),
     provideHttpClient(
       withFetch(),
-      withInterceptors([authenticationInterceptor])
+      withInterceptors([authenticationInterceptor]),
     ),
     provideAnimationsAsync(),
     provideTranslateService({
@@ -77,5 +78,11 @@ export const appConfig: ApplicationConfig = {
       defaultLanguage: 'en',
     }),
     provideCharts(withDefaultRegisterables()),
+    {
+      // this provider will be bpply globally to all form fields across the application
+      // that will automatically resize based on their hint text or errors
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { subscriptSizing: 'dynamic' },
+    },
   ],
 };

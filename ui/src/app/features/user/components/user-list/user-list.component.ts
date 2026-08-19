@@ -33,7 +33,7 @@ export class UserListComponent implements OnInit {
     'role',
     'status',
     'createdTime',
-    // 'actions',
+    'actions',
   ];
   USER_ID = USER_ID;
   icon = USER_ICONS;

@@ -96,7 +96,8 @@
     "noDataAvailable": "Không có dữ liệu nào khả dụng.",
     "copyright": "© 2026 Van Luu",
     "hint": {
-      "email": "Ví dụ: abc@gmail.com"
+      "email": "Ví dụ: abc@gmail.com",
+      "password": "Mật khẩu của bạn phải có độ dài từ 8 đến 12 ký tự và bao gồm một chữ cái viết hoa, một chữ cái viết thường, một chữ số và một ký tự đặc biệt."
     },
     "error": {
       "nameRequired": "*Tên là bắt buộc!",
@@ -108,7 +109,7 @@
       "emailRequired": "*Email là bắt buộc!",
       "emailInvalid": "*Địa chỉ email không hợp lệ!",
       "phoneRequired": "*Số điện thoại là bắt buộc!",
-      "phoneInvalid": "*Số điện thoại không hợp lệ!",
+      "phoneInvalid": "*Số điện thoại phải gồm 10 chữ số!",
       "contactNameRequired": "*Tên liên hệ là bắt buộc",
       "salutionRequired": "*Danh xưng là bắt buộc",
       "leadSrcRequired": "*Nguồn khách hàng tiềm năng là bắt buộc",

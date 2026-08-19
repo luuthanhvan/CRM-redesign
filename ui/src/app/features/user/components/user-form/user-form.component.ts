@@ -61,6 +61,13 @@ export class UserFormComponent implements OnInit {
       isActive: new FormControl(false),
     });
     if (this.data && this.data.action === 'edit') {
+      // remove required validator from password and confirm password fields
+      this.userForm.controls['password'].removeValidators(Validators.required);
+      this.userForm.controls['password'].updateValueAndValidity();
+      this.userForm.controls['confirmPassword'].removeValidators(
+        Validators.required,
+      );
+      this.userForm.controls['confirmPassword'].updateValueAndValidity();
       this.getUserById();
     }
   }
@@ -74,8 +81,6 @@ export class UserFormComponent implements OnInit {
   setFormData(data: User) {
     this.userForm.controls['name'].setValue(data['name'] || '');
     this.userForm.controls['username'].setValue(data['username'] || '');
-    this.userForm.controls['password'].setValue(data['password'] || '');
-    this.userForm.controls['confirmPassword'].setValue(data['password'] || '');
     this.userForm.controls['email'].setValue(data['email'] || '');
     this.userForm.controls['phone'].setValue(data['phone'] || '');
     this.userForm.controls['isAdmin'].setValue(data['isAdmin'] || false);
@@ -83,29 +88,20 @@ export class UserFormComponent implements OnInit {
   }
 
   onSubmit() {
-    const userInfo: User = {
-      name: this.userForm.controls['name'].value,
-      username: this.userForm.controls['username'].value,
-      password: this.userForm.controls['password'].value,
-      email: this.userForm.controls['email'].value,
-      phone: this.userForm.controls['phone'].value,
-      isAdmin: this.userForm.controls['isAdmin'].value,
-      isActive: this.userForm.controls['isActive'].value,
-    };
     if (this.data.action === 'add') {
       this.userApi
-        .createUser(userInfo)
+        .createUser(this.userForm.value)
         .pipe(
           tap((response) => {
             if (response.isSuccess()) {
               this.toastService.showSuccessMessage(
-                'Add new User!',
+                'Add new User successfully!',
                 this.USER_ID.TOAST_ADD_SUCCESS,
               );
               this.dialogRef.close();
             } else {
               this.toastService.showErrorMessage(
-                'Add new User!',
+                'Add new User failed!',
                 this.USER_ID.TOAST_ADD_FAILED,
               );
             }
@@ -114,18 +110,18 @@ export class UserFormComponent implements OnInit {
         .subscribe();
     } else {
       this.userApi
-        .updateUser(this.data.userId, userInfo)
+        .updateUser(this.data.userId, this.userForm.value)
         .pipe(
           tap((response) => {
             if (response.isSuccess()) {
               this.toastService.showSuccessMessage(
-                'Update the User!',
+                'Update the User successfully!',
                 this.USER_ID.TOAST_UPDATE_SUCCESS,
               );
               this.dialogRef.close();
             } else {
               this.toastService.showErrorMessage(
-                'Update new User!',
+                'Update the User failed!',
                 this.USER_ID.TOAST_UPDATE_FAILED,
               );
             }

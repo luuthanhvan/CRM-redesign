@@ -114,12 +114,14 @@ export class DashboardComponent implements OnInit {
         this.contactPieChartDatasets = [...this.contactPieChartDatasets];
         this.contactCount = data['contactCount'];
         this.totalContacts = data['totalContacts'];
-        this.contactCount.forEach((item: { [key: string]: any }) => {
-          const index = this.contactPieChartLabels.indexOf(item['_id']);
-          this.contactPieChartDatasets[0].data[index] = item['count'];
-        });
-        // Force chart update
-        this.contactChart.update();
+        if (this.contactCount.length > 0) {
+          this.contactCount.forEach((item: { [key: string]: any }) => {
+            const index = this.contactPieChartLabels.indexOf(item['_id']);
+            this.contactPieChartDatasets[0].data[index] = item['count'];
+          });
+          // Force chart update
+          this.contactChart.update();
+        }
       }
     });
   }
@@ -131,12 +133,14 @@ export class DashboardComponent implements OnInit {
         this.salesOrderCount = data['salesOrderCount'];
         this.totalSalesOrders = data['totalSalesOrders'];
         this.totalRevenue = data['totalRevenue'];
-        this.salesOrderCount.forEach((item: { [key: string]: any }) => {
-          const index = this.salesOrderPieChartLabels.indexOf(item['_id']);
-          this.salesOrderPieChartDatasets[0].data[index] = item['count'];
-        });
-        // Force chart update
-        this.salesOrderChart.update();
+        if (this.salesOrderCount.length > 0) {
+          this.salesOrderCount.forEach((item: { [key: string]: any }) => {
+            const index = this.salesOrderPieChartLabels.indexOf(item['_id']);
+            this.salesOrderPieChartDatasets[0].data[index] = item['count'];
+          });
+          // Force chart update
+          this.salesOrderChart.update();
+        }
       }
     });
   }
