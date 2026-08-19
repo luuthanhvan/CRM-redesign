@@ -168,7 +168,10 @@ class SalesOrderController {
         const responseData = {
           salesOrderCount: data[0].salesOrderCount,
           totalSalesOrders: total,
-          totalRevenue: data[0].summary[0].totalSum,
+          totalRevenue:
+            data[0].summary[0] && data[0].summary[0].totalSum
+              ? data[0].summary[0].totalSum
+              : 0,
         };
         return apiResponse.successResponseWithData(
           res,
