@@ -29,7 +29,11 @@
       >
         {{ "shared.changePassword" | translate }}
       </button>
-      <button mat-menu-item (click)="signout()" [id]="HOME_ID.BUTTON_SIGN_OUT">
+      <button
+        mat-menu-item
+        (click)="authService.signout()"
+        [id]="HOME_ID.BUTTON_SIGN_OUT"
+      >
         {{ "shared.signout" | translate }}
       </button>
     </mat-menu>

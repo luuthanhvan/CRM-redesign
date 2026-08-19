@@ -9,10 +9,10 @@ import {
 } from '@angular/forms';
 
 import { AUTH_ID } from '~features/authentication/auth.constant';
+import { AuthApi } from '~features/authentication/auth.api';
 import { AuthService } from '~features/authentication/auth.service';
 
 import { SharedModule } from '~shared/modules/shared.module';
-
 import { ToastService } from '~shared/services/toast.service';
 
 @Component({
@@ -22,6 +22,7 @@ import { ToastService } from '~shared/services/toast.service';
   styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnInit {
+  private authApi = inject(AuthApi);
   private authService = inject(AuthService);
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
@@ -59,7 +60,7 @@ export class LoginComponent implements OnInit {
   onSubmit(form: FormGroup) {
     this.submitted = true;
     const { username, password } = form.value;
-    this.authService.login(username, password).subscribe({
+    this.authApi.login(username, password).subscribe({
       next: (res) => {
         this.authService.setToken(res['data']);
         this.router.navigateByUrl('/');

@@ -10,6 +10,7 @@ export const APP_FEATURES = {
 export const APP_HTML_ELEMENTS = {
   BUTTON: 'button',
   CARD: 'card',
+  DIALOG: 'dialog',
   FORM: 'form',
   LIST: 'list',
   NOTIFICATION: 'notification',

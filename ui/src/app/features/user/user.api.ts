@@ -74,4 +74,10 @@ export class UserApi {
       .put(`${ENDPOINTS.user.user}/${id}`, data)
       .pipe(takeUntil(this.stop$));
   }
+
+  changeUserPassword(id: string, newPass: string) {
+    return this.apiService
+      .post(`${ENDPOINTS.user.user}/${id}`, { newPass })
+      .pipe(takeUntil(this.stop$));
+  }
 }
