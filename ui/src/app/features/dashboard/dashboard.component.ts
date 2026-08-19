@@ -1,34 +1,20 @@
-import { CommonModule, DecimalPipe } from '@angular/common';
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
-
-import { MatCardModule } from '@angular/material/card';
 
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartOptions } from 'chart.js';
 
-import { TranslateModule } from '@ngx-translate/core';
-
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {
-  faBagShopping,
-  faHandHoldingDollar,
-  faUserTag,
-} from '@fortawesome/free-solid-svg-icons';
-
-import { DASHBOARD_ID } from '~features/dashboard/dashboard.constant';
 import { ContactApi } from '~features/contact/contact.api';
+import {
+  DASHBOARD_ICONS,
+  DASHBOARD_ID,
+} from '~features/dashboard/dashboard.constant';
 import { SalesOrderApi } from '~features/sales-order/sales-order.api';
+
+import { SharedModule } from '~shared/modules/shared.module';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [
-    BaseChartDirective,
-    CommonModule,
-    DecimalPipe,
-    FontAwesomeModule,
-    MatCardModule,
-    TranslateModule,
-  ],
+  imports: [SharedModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
@@ -40,11 +26,7 @@ export class DashboardComponent implements OnInit {
   private salesOrderApi = inject(SalesOrderApi);
 
   DASHBOARD_ID = DASHBOARD_ID;
-  icon = {
-    faBagShopping,
-    faHandHoldingDollar,
-    faUserTag,
-  };
+  icon = DASHBOARD_ICONS;
 
   // Doughnut chart for contact
   contactPieChartLabels: string[] = [
@@ -115,6 +97,8 @@ export class DashboardComponent implements OnInit {
     },
   };
 
+  contactCount = [];
+  salesOrderCount = [];
   totalContacts = 0;
   totalSalesOrders = 0;
   totalRevenue = 0;
@@ -128,9 +112,9 @@ export class DashboardComponent implements OnInit {
     this.contactApi.countContacts('lead-source').subscribe((data: any) => {
       if (data) {
         this.contactPieChartDatasets = [...this.contactPieChartDatasets];
-        const contactCount = data['contactCount'];
+        this.contactCount = data['contactCount'];
         this.totalContacts = data['totalContacts'];
-        contactCount.forEach((item: { [key: string]: any }) => {
+        this.contactCount.forEach((item: { [key: string]: any }) => {
           const index = this.contactPieChartLabels.indexOf(item['_id']);
           this.contactPieChartDatasets[0].data[index] = item['count'];
         });
@@ -144,10 +128,10 @@ export class DashboardComponent implements OnInit {
     this.salesOrderApi.countSalesOrder('status').subscribe((data: any) => {
       if (data) {
         this.salesOrderPieChartDatasets = [...this.salesOrderPieChartDatasets];
-        const salesOrderCount = data['salesOrderCount'];
+        this.salesOrderCount = data['salesOrderCount'];
         this.totalSalesOrders = data['totalSalesOrders'];
         this.totalRevenue = data['totalRevenue'];
-        salesOrderCount.forEach((item: { [key: string]: any }) => {
+        this.salesOrderCount.forEach((item: { [key: string]: any }) => {
           const index = this.salesOrderPieChartLabels.indexOf(item['_id']);
           this.salesOrderPieChartDatasets[0].data[index] = item['count'];
         });

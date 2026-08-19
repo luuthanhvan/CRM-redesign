@@ -1,61 +1,22 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { MatButton } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatTableModule } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatTooltipModule } from '@angular/material/tooltip';
-
-import { TranslateModule } from '@ngx-translate/core';
-
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {
-  faDownload,
-  faMagnifyingGlass,
-  faPencil,
-  faPlus,
-  faTrashCan,
-  faXmark,
-} from '@fortawesome/free-solid-svg-icons';
 
 import { NoDataFoundComponent } from '~shared/components/no-data-found/no-data-found.component';
 
-import { USER_ID } from '~features/user/user.constant';
+import { USER_ICONS, USER_ID } from '~features/user/user.constant';
 import { User } from '~features/user/user.interface';
 import { UserApi } from '~features/user/user.api';
 import { UserFormComponent } from '~features/user/components/user-form/user-form.component';
-import { UserService } from '~features/user/user.service';
+
+import { SharedModule } from '~shared/modules/shared.module';
 
 @Component({
   selector: 'app-user-list',
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    FormsModule,
-    MatButton,
-    MatCardModule,
-    MatDatepickerModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatNativeDateModule,
-    MatPaginatorModule,
-    MatTableModule,
-    NoDataFoundComponent,
-    ReactiveFormsModule,
-    TranslateModule,
-    MatTooltipModule,
-  ],
-  providers: [MatDatepickerModule, MatNativeDateModule],
+  imports: [NoDataFoundComponent, SharedModule],
+  providers: [],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss',
 })
@@ -63,10 +24,8 @@ export class UserListComponent implements OnInit {
   @ViewChild(MatPaginator) userPaginator!: MatPaginator;
 
   readonly dialog = inject(MatDialog);
-  private userService = inject(UserService);
   private userApi = inject(UserApi);
 
-  USER_ID = USER_ID;
   displayedColumns: string[] = [
     'name',
     'email',
@@ -76,14 +35,8 @@ export class UserListComponent implements OnInit {
     'createdTime',
     // 'actions',
   ];
-  icon = {
-    faDownload,
-    faMagnifyingGlass,
-    faPencil,
-    faPlus,
-    faTrashCan,
-    faXmark,
-  };
+  USER_ID = USER_ID;
+  icon = USER_ICONS;
   dataSource = new MatTableDataSource<User>([]);
   totalRecords: number = 0;
 

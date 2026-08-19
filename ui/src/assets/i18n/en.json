@@ -7,6 +7,7 @@
     "searchByContactName": "Search Contact by Contact Name",
     "deleteContact": "Delete Contact(s)",
     "contactCountByLeadSrc": "Distribution of contacts based on potential customer sources",
+    "filterByLeadSrc": "Filtering by Lead Source",
     "table": {
       "contactName": "Contact Name",
       "salutation": "Salutation",

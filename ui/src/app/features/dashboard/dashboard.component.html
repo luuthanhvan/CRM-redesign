@@ -65,7 +65,7 @@
       </div>
     </div>
 
-    <div class="col-6 mb-3">
+    <div class="col-6 mb-3" *ngIf="contactCount.length > 0">
       <div class="dashboard-chart-wrapper" id="contact-chart">
         <div class="chart-title">
           <h5>{{ "contact.title" | translate }}</h5>
@@ -85,7 +85,7 @@
         </canvas>
       </div>
     </div>
-    <div class="col-6 mb-3">
+    <div class="col-6 mb-3" *ngIf="salesOrderCount.length > 0">
       <div class="dashboard-chart-wrapper" id="sales-order-chart">
         <div class="chart-title">
           <h5>{{ "salesOrder.title" | translate }}</h5>

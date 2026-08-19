@@ -1,9 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CommonService {
+  private router = inject(Router);
+
   downloadReport(blobData: Blob, filename = 'report.csv') {
     // Create an internal URL pointing to the binary blob data
     const blob = new Blob([blobData], { type: 'text/csv;charset=utf-8;' });
@@ -19,5 +22,12 @@ export class CommonService {
     // Cleanup the virtual elements
     document.body.removeChild(link);
     window.URL.revokeObjectURL(downloadUrl);
+  }
+
+  navigateToSubScreen(screen: string, queryParams?: {}) {
+    this.router.navigate([screen], {
+      queryParams,
+      queryParamsHandling: 'merge', // keep the query params if they exist
+    });
   }
 }

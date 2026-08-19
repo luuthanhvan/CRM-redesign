@@ -1,86 +1,50 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-
-import { tap } from 'rxjs/operators';
-import { TranslateModule } from '@ngx-translate/core';
-
-import { MatNativeDateModule } from '@angular/material/core';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { tap } from 'rxjs/operators';
 
-import { MatButton } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogModule,
-  MatDialogRef,
-} from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPencil, faPlus } from '@fortawesome/free-solid-svg-icons';
-
-import { ToastService } from '~shared/services/toast.service';
 import { CommonValidator } from '~core/validators/common.validator';
 
-import { CONTACT_ID } from '~features/contact/contact.constant';
+import {
+  CONTACT_ID,
+  CONTACT_ICONS,
+  CONTACT_LEAD_SOURCES,
+  CONTACT_SALUTATIONS,
+} from '~features/contact/contact.constant';
 import { Contact } from '~features/contact/contact.interface';
 import { ContactApi } from '~features/contact/contact.api';
+
 import { User } from '~features/user/user.interface';
-import { UserService } from '~features/user/user.service';
+import { UserApi } from '~features/user/user.api';
+
+import { SharedModule } from '~shared/modules/shared.module';
+import { ToastService } from '~shared/services/toast.service';
 
 @Component({
   selector: 'app-contact-form',
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    FormsModule,
-    MatButton,
-    MatCheckboxModule,
-    MatDatepickerModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatNativeDateModule,
-    MatSelectModule,
-    ReactiveFormsModule,
-    TranslateModule,
-  ],
-  providers: [MatDatepickerModule, MatNativeDateModule],
+  imports: [SharedModule],
+  providers: [],
   templateUrl: './contact-form.component.html',
   styleUrl: './contact-form.component.scss',
 })
 export class ContactFormComponent implements OnInit {
-  readonly dialogRef = inject(MatDialogRef<ContactFormComponent>);
-  private formBuilder = inject(FormBuilder);
   private contactApi = inject(ContactApi);
+  private formBuilder = inject(FormBuilder);
   private toastService = inject(ToastService);
-  private userService = inject(UserService);
-  data = inject(MAT_DIALOG_DATA);
+  private userApi = inject(UserApi);
+  protected data = inject(MAT_DIALOG_DATA);
+  readonly dialogRef = inject(MatDialogRef<ContactFormComponent>);
 
   CONTACT_ID = CONTACT_ID;
-  salutations: string[] = ['None', 'Mr.', 'Mrs.', 'Ms.', 'Dr.', 'Prof.'];
-  leadSources: string[] = [
-    'Existing Customer',
-    'Partner',
-    'Conference',
-    'Website',
-    'Word of mouth',
-    'Other',
-  ];
-  icon = {
-    faPencil,
-    faPlus,
-  };
+  salutations = CONTACT_SALUTATIONS;
+  leadSources = CONTACT_LEAD_SOURCES;
+  icon = CONTACT_ICONS;
 
   contactForm!: FormGroup;
   assignedToUsers: User[] = [];
@@ -107,7 +71,7 @@ export class ContactFormComponent implements OnInit {
       description: new FormControl(''),
     });
 
-    this.userService.getListOfUserNames().subscribe((data) => {
+    this.userApi.getListOfUserNames().subscribe((data) => {
       this.assignedToUsers = data || [];
     });
 

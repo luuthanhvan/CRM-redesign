@@ -94,9 +94,12 @@
           mat-cell
           *matCellDef="let element"
           (click)="
-            navigateToSubScreen('/sales-order/sales-order-details', {
-              salesOrderId: element._id,
-            })
+            commonService.navigateToSubScreen(
+              '/sales-order/sales-order-details',
+              {
+                salesOrderId: element._id,
+              }
+            )
           "
         >
           {{ element.subject }}

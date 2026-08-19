@@ -2,7 +2,23 @@ import {
   APP_FEATURES as FEATURES,
   APP_HTML_ELEMENTS as HTML_ELEMENTS,
 } from '~core/constants';
+import {
+  faDownload,
+  faMagnifyingGlass,
+  faPencil,
+  faPlus,
+  faTrashCan,
+  faXmark,
+} from '@fortawesome/free-solid-svg-icons';
 
+export const USER_ICONS = {
+  faDownload,
+  faMagnifyingGlass,
+  faPencil,
+  faPlus,
+  faTrashCan,
+  faXmark,
+};
 /* Define specific Ids for UI elements */
 export const USER_ID = {
   BUTTON_CANCEL: `${FEATURES.USERS}-${HTML_ELEMENTS.BUTTON}-cancel`,

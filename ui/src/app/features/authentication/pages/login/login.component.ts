@@ -1,41 +1,23 @@
-import { CommonModule } from '@angular/common';
-import { inject } from '@angular/core';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 import {
   FormControl,
   FormBuilder,
   FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-
-import { TranslateModule } from '@ngx-translate/core';
-
-import { MatButton } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-
-import { ToastService } from '~shared/services/toast.service';
 
 import { AUTH_ID } from '~features/authentication/auth.constant';
 import { AuthService } from '~features/authentication/auth.service';
 
+import { SharedModule } from '~shared/modules/shared.module';
+
+import { ToastService } from '~shared/services/toast.service';
+
 @Component({
   selector: 'app-login',
-  imports: [
-    CommonModule,
-    FormsModule,
-    TranslateModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatButton,
-    MatFormFieldModule,
-    MatIconModule,
-  ],
+  imports: [SharedModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })

@@ -34,14 +34,16 @@
       *ngIf="currentUserInfo && currentUserInfo['isAdmin']"
     >
       <mat-form-field class="form-filter">
-        <mat-label>Filtering by Lead Source</mat-label>
+        <mat-label>{{ "contact.filterByLeadSrc" | translate }}</mat-label>
         <mat-select
           [formControl]="leadSource"
           multiple
           (selectionChange)="onLeadSrcChange($event)"
         >
           @for (leadSrc of leadSourceList; track leadSrc) {
-            <mat-option [value]="leadSrc">{{ leadSrc }}</mat-option>
+            <mat-option [value]="leadSrc" [disabled]="totalRecords === 0">{{
+              leadSrc
+            }}</mat-option>
           }
         </mat-select>
       </mat-form-field>
@@ -67,9 +69,10 @@
       <button
         mat-button
         [disableRipple]="true"
+        [disabled]="totalRecords === 0"
         [ngClass]="totalRecords === 0 ? 'btn-disabled' : 'btn-secondary'"
         [id]="CONTACT_ID.BUTTON_DOWNLOAD"
-        (click)="onDownloadAllContacts()"
+        (click)="totalRecords > 0 && onDownloadAllContacts()"
       >
         <fa-icon [icon]="icon.faDownload" size="lg" class="me-2"></fa-icon>
         <span>Download</span>
@@ -117,7 +120,7 @@
           mat-cell
           *matCellDef="let element"
           (click)="
-            navigateToSubScreen('/contact/contact-details', {
+            commonService.navigateToSubScreen('/contact/contact-details', {
               contactId: element._id,
             })
           "

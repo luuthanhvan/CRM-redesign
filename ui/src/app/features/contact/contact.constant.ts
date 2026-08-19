@@ -2,7 +2,23 @@ import {
   APP_FEATURES as FEATURES,
   APP_HTML_ELEMENTS as HTML_ELEMENTS,
 } from '~core/constants';
+import {
+  faDownload,
+  faMagnifyingGlass,
+  faPencil,
+  faPlus,
+  faTrashCan,
+  faXmark,
+} from '@fortawesome/free-solid-svg-icons';
 
+export const CONTACT_ICONS = {
+  faDownload,
+  faMagnifyingGlass,
+  faPencil,
+  faPlus,
+  faTrashCan,
+  faXmark,
+};
 /* Define specific Ids for UI elements */
 export const CONTACT_ID = {
   BUTTON_CANCEL: `${FEATURES.CONTACTS}-${HTML_ELEMENTS.BUTTON}-cancel`,
@@ -24,7 +40,7 @@ export const CONTACT_ID = {
   CONTACT_MAIN_SECTION: `${FEATURES.CONTACTS}`,
 
   INPUT_SEARCH: `${FEATURES.CONTACTS}-${HTML_ELEMENTS.FORM}-search`,
-  
+
   TOAST_ADD_FAILED: `${FEATURES.CONTACTS}-${HTML_ELEMENTS.NOTIFICATION}-addFailed`,
   TOAST_ADD_SUCCESS: `${FEATURES.CONTACTS}-${HTML_ELEMENTS.NOTIFICATION}-addSuccess`,
   TOAST_DELETE_FAILED: `${FEATURES.CONTACTS}-${HTML_ELEMENTS.NOTIFICATION}-deleteFailed`,
@@ -34,3 +50,19 @@ export const CONTACT_ID = {
   TOAST_UPDATE_FAILED: `${FEATURES.CONTACTS}-${HTML_ELEMENTS.NOTIFICATION}-updateFailed`,
   TOAST_UPDATE_SUCCESS: `${FEATURES.CONTACTS}-${HTML_ELEMENTS.NOTIFICATION}-updateSuccess`,
 };
+export const CONTACT_LEAD_SOURCES: string[] = [
+  'Conference',
+  'Existing Customer',
+  'Other',
+  'Partner',
+  'Website',
+  'Word of mouth',
+];
+export const CONTACT_SALUTATIONS: string[] = [
+  'Dr.',
+  'Mr.',
+  'Mrs.',
+  'Ms.',
+  'None',
+  'Prof.',
+];

@@ -2,7 +2,23 @@ import {
   APP_FEATURES as FEATURES,
   APP_HTML_ELEMENTS as HTML_ELEMENTS,
 } from '~core/constants';
+import {
+  faBagShopping,
+  faGauge,
+  faGear,
+  faListCheck,
+  faUsers,
+  faUserTag,
+} from '@fortawesome/free-solid-svg-icons';
 
+export const HOME_ICONS = {
+  faBagShopping,
+  faGauge,
+  faGear,
+  faListCheck,
+  faUsers,
+  faUserTag,
+};
 /* Define specific Ids for UI elements */
 export const HOME_ID = {
   BUTTON_CHANGE_PASSWORD: `${FEATURES.HOME}-${HTML_ELEMENTS.BUTTON}-changePassword`,

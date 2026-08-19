@@ -7,6 +7,7 @@
     "searchByContactName": "Tìm kiếm theo tên liên hệ",
     "deleteContact": "Xóa liên hệ",
     "contactCountByLeadSrc": "Phân bổ liên hệ dựa trên nguồn khách hàng tiềm năng",
+    "filterByLeadSrc": "Lọc theo Nguồn khách hàng tiềm năng",
     "table": {
       "contactName": "Tên liên hệ",
       "salutation": "Danh xưng",

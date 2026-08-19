@@ -1,64 +1,37 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 
 import { tap } from 'rxjs/operators';
 
-import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import {
-  MatDialogModule,
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-} from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { TranslateModule } from '@ngx-translate/core';
-
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPencil, faPlus } from '@fortawesome/free-solid-svg-icons';
-
-import { ToastService } from '~shared/services/toast.service';
 import { CommonValidator } from '~core/validators/common.validator';
 
 import { Contact } from '~features/contact/contact.interface';
 import { ContactApi } from '~features/contact/contact.api';
 
-import { SALES_ORDER_ID } from '~features/sales-order/sales-order.constant';
+import {
+  SALES_ORDER_ICONS,
+  SALES_ORDER_ID,
+  SALES_ORDER_STATUSES,
+} from '~features/sales-order/sales-order.constant';
 import { SalesOrder } from '~features/sales-order/sales-order.interface';
 import { SalesOrderApi } from '~features/sales-order/sales-order.api';
 
 import { User } from '~features/user/user.interface';
-import { UserService } from '~features/user/user.service';
+import { UserApi } from '~features/user/user.api';
+
+import { ToastService } from '~shared/services/toast.service';
+import { SharedModule } from '~shared/modules/shared.module';
 
 @Component({
   selector: 'app-sales-order-form',
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    FormsModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatSelectModule,
-    MatSlideToggleModule,
-    ReactiveFormsModule,
-    TranslateModule,
-  ],
+  imports: [SharedModule],
   templateUrl: './sales-order-form.component.html',
   styleUrl: './sales-order-form.component.scss',
 })
@@ -67,16 +40,13 @@ export class SalesOrderFormComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
   private salesOrderApi = inject(SalesOrderApi);
   private toastService = inject(ToastService);
-  private userService = inject(UserService);
+  private userApi = inject(UserApi);
+  protected data = inject(MAT_DIALOG_DATA);
   readonly dialogRef = inject(MatDialogRef<SalesOrderFormComponent>);
-  data = inject(MAT_DIALOG_DATA);
 
   SALES_ORDER_ID = SALES_ORDER_ID;
-  statusNames: string[] = ['Created', 'Approved', 'Delivered', 'Canceled'];
-  icon = {
-    faPencil,
-    faPlus,
-  };
+  icon = SALES_ORDER_ICONS;
+  statusNames = SALES_ORDER_STATUSES;
 
   salesOrderForm!: FormGroup;
   contacts: Contact[] = [];
@@ -106,7 +76,7 @@ export class SalesOrderFormComponent implements OnInit {
       }
     });
 
-    this.userService.getListOfUserNames().subscribe((data) => {
+    this.userApi.getListOfUserNames().subscribe((data) => {
       this.assignedToUsers = data || [];
     });
 

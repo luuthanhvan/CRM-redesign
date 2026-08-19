@@ -1,72 +1,40 @@
-import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 
-import { MatButton } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import {
-  MatDialogModule,
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-} from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-
-import { TranslateModule } from '@ngx-translate/core';
-
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPencil, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { tap } from 'rxjs/operators';
 
-import { ToastService } from '~shared/services/toast.service';
 import { CommonValidator } from '~core/validators/common.validator';
 import { UserValidator } from '~core/validators/user.validator';
 
-import { USER_ID } from '~features/user/user.constant';
-import { UserService } from '~features/user/user.service';
+import { USER_ICONS, USER_ID } from '~features/user/user.constant';
 import { User } from '~features/user/user.interface';
+import { UserApi } from '~features/user/user.api';
+
+import { ToastService } from '~shared/services/toast.service';
+import { SharedModule } from '~shared/modules/shared.module';
 
 @Component({
   selector: 'app-user-form',
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    FormsModule,
-    MatButton,
-    MatCheckboxModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatSlideToggleModule,
-    ReactiveFormsModule,
-    TranslateModule,
-  ],
+  imports: [SharedModule],
   templateUrl: './user-form.component.html',
   styleUrl: './user-form.component.scss',
 })
 export class UserFormComponent implements OnInit {
-  readonly dialogRef = inject(MatDialogRef<UserFormComponent>);
   private formBuilder = inject(FormBuilder);
   private toastService = inject(ToastService);
-  private userService = inject(UserService);
-  data = inject(MAT_DIALOG_DATA);
+  private userApi = inject(UserApi);
+  protected data = inject(MAT_DIALOG_DATA);
+  readonly dialogRef = inject(MatDialogRef<UserFormComponent>);
 
   USER_ID = USER_ID;
-  icon = {
-    faPencil,
-    faPlus,
-  };
+  icon = USER_ICONS;
   userForm!: FormGroup;
 
   ngOnInit(): void {
@@ -98,7 +66,7 @@ export class UserFormComponent implements OnInit {
   }
 
   getUserById() {
-    this.userService.getUser(this.data.userId).subscribe((data) => {
+    this.userApi.getUser(this.data.userId).subscribe((data) => {
       data && this.setFormData(data);
     });
   }
@@ -125,7 +93,7 @@ export class UserFormComponent implements OnInit {
       isActive: this.userForm.controls['isActive'].value,
     };
     if (this.data.action === 'add') {
-      this.userService
+      this.userApi
         .createUser(userInfo)
         .pipe(
           tap((response) => {
@@ -145,7 +113,7 @@ export class UserFormComponent implements OnInit {
         )
         .subscribe();
     } else {
-      this.userService
+      this.userApi
         .updateUser(this.data.userId, userInfo)
         .pipe(
           tap((response) => {

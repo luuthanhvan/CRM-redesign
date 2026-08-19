@@ -2,7 +2,23 @@ import {
   APP_FEATURES as FEATURES,
   APP_HTML_ELEMENTS as HTML_ELEMENTS,
 } from '~core/constants';
+import {
+  faDownload,
+  faMagnifyingGlass,
+  faPencil,
+  faPlus,
+  faTrashCan,
+  faXmark,
+} from '@fortawesome/free-solid-svg-icons';
 
+export const SALES_ORDER_ICONS = {
+  faDownload,
+  faMagnifyingGlass,
+  faPencil,
+  faPlus,
+  faTrashCan,
+  faXmark,
+};
 /* Define specific Ids for UI elements */
 export const SALES_ORDER_ID = {
   BUTTON_CANCEL: `${FEATURES.SALES_ORDERS}-${HTML_ELEMENTS.BUTTON}-cancel`,
@@ -33,3 +49,9 @@ export const SALES_ORDER_ID = {
   TOAST_UPDATE_FAILED: `${FEATURES.SALES_ORDERS}-${HTML_ELEMENTS.NOTIFICATION}-updateFailed`,
   TOAST_UPDATE_SUCCESS: `${FEATURES.SALES_ORDERS}-${HTML_ELEMENTS.NOTIFICATION}-updateSuccess`,
 };
+export const SALES_ORDER_STATUSES: string[] = [
+  'Created',
+  'Approved',
+  'Delivered',
+  'Canceled',
+];

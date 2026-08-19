@@ -1,60 +1,25 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterOutlet, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
-
-import { MatButton } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatToolbarModule } from '@angular/material/toolbar';
-
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {
-  faBagShopping,
-  faGauge,
-  faGear,
-  faListCheck,
-  faUsers,
-  faUserTag,
-} from '@fortawesome/free-solid-svg-icons';
-
-import { ProgressSpinnerComponent } from '~shared/components/progress-spinner/progress-spinner.component';
+import { TranslateService } from '@ngx-translate/core';
 
 import { AuthService } from '~features/authentication/auth.service';
-import { HOME_ID } from '~core/layout/home/home.constant';
+import { HOME_ICONS, HOME_ID } from '~core/layout/home/home.constant';
 import { User } from '~features/user/user.interface';
+
+import { ProgressSpinnerComponent } from '~shared/components/progress-spinner/progress-spinner.component';
+import { SharedModule } from '~shared/modules/shared.module';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   standalone: true,
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    MatButton,
-    MatIconModule,
-    MatMenuModule,
-    MatSidenavModule,
-    MatToolbarModule,
-    ProgressSpinnerComponent,
-    RouterModule,
-    RouterOutlet,
-    TranslateModule,
-  ],
+  imports: [ProgressSpinnerComponent, SharedModule],
 })
 export class HomeComponent implements OnInit {
   HOME_ID = HOME_ID;
-  icon = {
-    faBagShopping,
-    faGauge,
-    faGear,
-    faListCheck,
-    faUsers,
-    faUserTag,
-  };
+  icon = HOME_ICONS;
   currentUser!: User;
   isBrowserRefresh: boolean = false;
   isAdminUser: boolean = false;

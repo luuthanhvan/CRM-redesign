@@ -1,7 +1,5 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormControl } from '@angular/forms';
 import { Observable, combineLatest, of } from 'rxjs';
 import {
   debounceTime,
@@ -12,74 +10,40 @@ import {
   tap,
 } from 'rxjs/operators';
 
-import { MatButton } from '@angular/material/button';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSelectModule, MatSelectChange } from '@angular/material/select';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSelectChange } from '@angular/material/select';
+import { MatTableDataSource } from '@angular/material/table';
 
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {
-  faDownload,
-  faMagnifyingGlass,
-  faPencil,
-  faPlus,
-  faTrashCan,
-  faXmark,
-} from '@fortawesome/free-solid-svg-icons';
-
-import { TranslateModule } from '@ngx-translate/core';
-
-import { DialogComponent } from '~shared/components/dialog/dialog.component';
-import { NoDataFoundComponent } from '~shared/components/no-data-found/no-data-found.component';
-
-import { CommonService } from '~shared/services/common.service';
-import { ToastService } from '~shared/services/toast.service';
-
-import { CONTACT_ID } from '~features/contact/contact.constant';
+import { CONTACT_ICONS, CONTACT_ID } from '~features/contact/contact.constant';
 import { Contact } from '~features/contact/contact.interface';
 import { ContactApi } from '~features/contact/contact.api';
 import { ContactFormComponent } from '~features/contact/components/contact-form/contact-form.component';
 import { ContactService } from '~features/contact/contact.service';
 
+import { DialogComponent } from '~shared/components/dialog/dialog.component';
+import { NoDataFoundComponent } from '~shared/components/no-data-found/no-data-found.component';
+
+import { SharedModule } from '~shared/modules/shared.module';
+
+import { CommonService } from '~shared/services/common.service';
+import { ToastService } from '~shared/services/toast.service';
+
 @Component({
   selector: 'app-contact-list',
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    FormsModule,
-    MatButton,
-    MatDatepickerModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatNativeDateModule,
-    MatPaginatorModule,
-    MatSelectModule,
-    MatTableModule,
-    MatTooltipModule,
-    NoDataFoundComponent,
-    ReactiveFormsModule,
-    TranslateModule,
-  ],
-  providers: [MatDatepickerModule, MatNativeDateModule],
+  imports: [SharedModule, NoDataFoundComponent],
+  providers: [],
   templateUrl: './contact-list.component.html',
   styleUrl: './contact-list.component.scss',
 })
 export class ContactListComponent implements OnInit {
   @ViewChild(MatPaginator) contactPaginator!: MatPaginator;
 
-  private commonService = inject(CommonService);
   private contactApi = inject(ContactApi);
-  private router = inject(Router);
   private toastService = inject(ToastService);
+  protected commonService = inject(CommonService);
+  protected contactService = inject(ContactService);
   public dialog = inject(MatDialog);
-  public contactService = inject(ContactService);
 
   CONTACT_ID = CONTACT_ID;
   displayedColumns: string[] = [
@@ -91,14 +55,8 @@ export class ContactListComponent implements OnInit {
     'email',
     'assignedTo',
   ];
-  icon = {
-    faDownload,
-    faMagnifyingGlass,
-    faPencil,
-    faPlus,
-    faTrashCan,
-    faXmark,
-  };
+  icon = CONTACT_ICONS;
+
   dataSource = new MatTableDataSource<Contact>([]);
   totalRecords: number = 0;
   contactIdsChecked: string[] = [];
@@ -287,12 +245,6 @@ export class ContactListComponent implements OnInit {
           this.setTableData(contactData);
         }
       });
-  }
-
-  navigateToSubScreen(screen: string, data: {}) {
-    this.router.navigate([screen], {
-      state: data,
-    });
   }
 
   onDownloadAllContacts() {
