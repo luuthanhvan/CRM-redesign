@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
 import {
@@ -13,6 +13,7 @@ import { AuthApi } from '~features/authentication/auth.api';
 import { AuthService } from '~features/authentication/auth.service';
 
 import { SharedModule } from '~shared/modules/shared.module';
+import { CommonService } from '~shared/services/common.service';
 import { ToastService } from '~shared/services/toast.service';
 
 @Component({
@@ -27,6 +28,9 @@ export class LoginComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
   private toastService = inject(ToastService);
+  protected commonService = inject(CommonService);
+
+  togglePassword = signal(true);
 
   AUTH_ID = AUTH_ID;
   errorMessage: string = '';

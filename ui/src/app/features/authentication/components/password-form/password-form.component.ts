@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -18,6 +18,7 @@ import { AuthService } from '~features/authentication/auth.service';
 import { UserApi } from '~features/user/user.api';
 
 import { SharedModule } from '~shared/modules/shared.module';
+import { CommonService } from '~shared/services/common.service';
 import { ToastService } from '~shared/services/toast.service';
 
 @Component({
@@ -32,8 +33,12 @@ export class PasswordFormComponent implements OnInit {
   private toastService = inject(ToastService);
   private userApi = inject(UserApi);
   private authService = inject(AuthService);
+  protected commonService = inject(CommonService);
   protected data = inject(MAT_DIALOG_DATA);
   readonly dialogRef = inject(MatDialogRef<PasswordFormComponent>);
+
+  togglePassword = signal(true);
+  toggleConfirmPassword = signal(true);
 
   AUTH_ID = AUTH_ID;
   icon = { faKey };

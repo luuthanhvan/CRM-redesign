@@ -38,10 +38,16 @@
           <mat-form-field class="w-100 mb-2" appearance="outline">
             <input
               matInput
-              type="password"
               formControlName="password"
-              minlength="6"
+              [type]="togglePassword() ? 'password' : 'text'"
             />
+            <mat-icon
+              matSuffix
+              (click)="commonService.toggleVisibility($event, togglePassword)"
+              class="text-black"
+            >
+              {{ togglePassword() ? "visibility_off" : "visibility" }}
+            </mat-icon>
             @if (loginFormControl["password"].errors?.["required"]) {
               <mat-error>
                 {{ "shared.error.passwordRequired" | translate }}

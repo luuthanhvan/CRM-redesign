@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -29,5 +29,10 @@ export class CommonService {
       queryParams,
       queryParamsHandling: 'merge', // keep the query params if they exist
     });
+  }
+
+  toggleVisibility(event: MouseEvent, signal: WritableSignal<boolean>) {
+    signal.update((prev) => !prev);
+    event.preventDefault(); // Prevents form submission if placed inside a form
   }
 }

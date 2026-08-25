@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -17,8 +17,9 @@ import { USER_ICONS, USER_ID } from '~features/user/user.constant';
 import { User } from '~features/user/user.interface';
 import { UserApi } from '~features/user/user.api';
 
-import { ToastService } from '~shared/services/toast.service';
 import { SharedModule } from '~shared/modules/shared.module';
+import { CommonService } from '~shared/services/common.service';
+import { ToastService } from '~shared/services/toast.service';
 
 @Component({
   selector: 'app-user-form',
@@ -30,8 +31,12 @@ export class UserFormComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
   private toastService = inject(ToastService);
   private userApi = inject(UserApi);
+  protected commonService = inject(CommonService);
   protected data = inject(MAT_DIALOG_DATA);
   readonly dialogRef = inject(MatDialogRef<UserFormComponent>);
+
+  togglePassword = signal(true);
+  toggleConfirmPassword = signal(true);
 
   USER_ID = USER_ID;
   icon = USER_ICONS;
