@@ -19,8 +19,8 @@ import { SharedModule } from '~shared/modules/shared.module';
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit {
-  @ViewChild(BaseChartDirective) contactChart!: BaseChartDirective;
-  @ViewChild(BaseChartDirective) salesOrderChart!: BaseChartDirective;
+  @ViewChild(BaseChartDirective) contactChart?: BaseChartDirective;
+  @ViewChild(BaseChartDirective) salesOrderChart?: BaseChartDirective;
 
   private contactApi = inject(ContactApi);
   private salesOrderApi = inject(SalesOrderApi);
@@ -108,6 +108,12 @@ export class DashboardComponent implements OnInit {
     this.loadSalesOrderChartData();
   }
 
+  ngAfterViewInit() {
+    // Safe to update here once the view initializes
+    this.contactChart?.update();
+    this.salesOrderChart?.update();
+  }
+
   loadContactChartData() {
     this.contactApi.countContacts('lead-source').subscribe((data: any) => {
       if (data) {
@@ -119,8 +125,6 @@ export class DashboardComponent implements OnInit {
             const index = this.contactPieChartLabels.indexOf(item['_id']);
             this.contactPieChartDatasets[0].data[index] = item['count'];
           });
-          // Force chart update
-          this.contactChart.update();
         }
       }
     });
@@ -138,8 +142,6 @@ export class DashboardComponent implements OnInit {
             const index = this.salesOrderPieChartLabels.indexOf(item['_id']);
             this.salesOrderPieChartDatasets[0].data[index] = item['count'];
           });
-          // Force chart update
-          this.salesOrderChart.update();
         }
       }
     });
