@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config({ path: "../../.env" });
 const logger = require('../configs/winston');
-const { CONFIG } = require('../ultils/constants');
+const { CONFIG } = require('../constants/CommonConstants');
 const bcrypt = require("../configs/bcrypt");
 
 const Schema = mg.Schema;

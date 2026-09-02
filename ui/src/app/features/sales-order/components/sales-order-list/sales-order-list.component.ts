@@ -12,7 +12,7 @@ import {
 } from 'rxjs/operators';
 
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
 import {
@@ -65,6 +65,9 @@ export class SalesOrderListComponent implements OnInit {
   orderIdsChecked: string[] = [];
   currentUserInfo: Record<string, any>;
 
+  pageSize = 10;
+  pageIndex = 0;
+
   constructor() {
     const currentUserInfo = window.localStorage.getItem('currentUser');
     this.currentUserInfo = currentUserInfo && JSON.parse(currentUserInfo);
@@ -87,25 +90,40 @@ export class SalesOrderListComponent implements OnInit {
       distinctUntilChanged(),
       switchMap((subject) =>
         subject
-          ? this.salesOrderApi.searchSalesOrders({ subject })
+          ? this.salesOrderApi.searchSalesOrders({
+              ...(subject !== '' && { subject }),
+            })
           : of(undefined),
       ),
     );
+    const salesOrders$ = this.salesOrderApi.getListOfSalesOrders({
+      page: this.pageIndex + 1,
+      limit: this.pageSize,
+    });
 
-    combineLatest([this.salesOrderApi.getListOfSalesOrders(), this.search$])
+    combineLatest([salesOrders$, this.search$])
       .pipe(map(([salesOrder, searchResult]) => searchResult || salesOrder))
-      .subscribe((data) => {
-        if (data) {
-          this.totalRecords = data.length;
-          this.dataSource = new MatTableDataSource(data);
-          this.dataSource.paginator = this.salesOrderPaginator;
+      .subscribe((responseData) => {
+        if (responseData) {
+          this.setTableData(responseData);
         }
       });
   }
 
-  resetData() {
-    this.searchText = new FormControl('');
-    this.loadData();
+  setTableData(data: Record<string, any>) {
+    this.totalRecords = data['totalRecords'];
+    this.dataSource = data['salesOrders'];
+  }
+
+  resetFilterData() {
+    if (this.searchText.value !== '') {
+      this.searchText = new FormControl('');
+    }
+  }
+
+  resetPagination() {
+    this.pageIndex = 0;
+    this.pageSize = 10;
   }
 
   openFormDialog(action: string, orderId?: string) {
@@ -120,7 +138,11 @@ export class SalesOrderListComponent implements OnInit {
       },
     });
     formDialogRef.afterClosed().subscribe((result) => {
-      this.loadData();
+      if (result !== 'cancel') {
+        this.resetFilterData();
+        this.resetPagination();
+        this.loadData();
+      }
     });
   }
 
@@ -152,7 +174,11 @@ export class SalesOrderListComponent implements OnInit {
       },
     );
     confirmDialogRef.afterClosed().subscribe((result) => {
-      this.loadData();
+      if (result !== 'cancel') {
+        this.resetFilterData();
+        this.resetPagination();
+        this.loadData();
+      }
     });
   }
 
@@ -186,8 +212,12 @@ export class SalesOrderListComponent implements OnInit {
       },
     );
     confirmDialogRef.afterClosed().subscribe((result) => {
-      this.orderIdsChecked = [];
-      this.loadData();
+      if (result !== 'cancel') {
+        this.orderIdsChecked = [];
+        this.resetFilterData();
+        this.resetPagination();
+        this.loadData();
+      }
     });
   }
 
@@ -201,5 +231,11 @@ export class SalesOrderListComponent implements OnInit {
       // remove the unchecked value from array
       this.orderIdsChecked.splice(this.orderIdsChecked.indexOf(orderId), 1);
     }
+  }
+
+  onPageChange(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadData();
   }
 }

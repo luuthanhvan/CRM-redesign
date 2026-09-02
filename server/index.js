@@ -2,7 +2,7 @@ require("./configs/passport");
 const express = require("express");
 const cors = require("cors");
 const logger = require("./configs/winston");
-const { CONFIG } = require("./ultils/constants");
+const { CONFIG } = require("./constants/CommonConstants");
 const passport = require("passport");
 const route = require("./routers");
 const dotenv = require("dotenv");
@@ -18,7 +18,7 @@ db.mongo();
 app.use(
   express.urlencoded({
     extended: true,
-  })
+  }),
 );
 app.use(express.json());
 app.use(cors());
@@ -31,7 +31,7 @@ route(app);
 if (process.env.SERVER_PORT && process.env.HOSTNAME) {
   app.listen(process.env.SERVER_PORT, process.env.HOSTNAME, () => {
     logger.info(
-      `${CONFIG.SERVER_IS_RUNNING_AT} http://${process.env.HOSTNAME}:${process.env.SERVER_PORT}`
+      `${CONFIG.SERVER_IS_RUNNING_AT} http://${process.env.HOSTNAME}:${process.env.SERVER_PORT}`,
     );
   });
 } else {

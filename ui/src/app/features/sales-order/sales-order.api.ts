@@ -34,9 +34,9 @@ export class SalesOrderApi {
       .get<ResponseList>(`${ENDPOINTS.salesOrder.countSalesOrder}/${countBy}`)
       .pipe(
         map((response) =>
-          response.isSuccess() ? response.value.data : undefined
+          response.isSuccess() ? response.value.data : undefined,
         ),
-        takeUntil(this.stop$)
+        takeUntil(this.stop$),
       );
   }
 
@@ -50,15 +50,17 @@ export class SalesOrderApi {
       .pipe(takeUntil(this.stop$));
   }
 
-  getListOfSalesOrders() {
+  getListOfSalesOrders(params: Record<string, any>) {
     return this.apiService
-      .get<ResponseList<SalesOrder>>(ENDPOINTS.salesOrder.salesOrderList)
+      .get<
+        ResponseList<SalesOrder>
+      >(ENDPOINTS.salesOrder.salesOrderList, params)
       .pipe(
         map((response) =>
-          response.isSuccess() ? response.value.data : undefined
+          response.isSuccess() ? response.value.data : undefined,
         ),
         takeUntil(this.stop$),
-        shareReplay()
+        shareReplay(),
       );
   }
 
@@ -71,27 +73,26 @@ export class SalesOrderApi {
           headers: {
             skipLoading: 'true',
           },
-        }
+        },
       )
       .pipe(
         map((response) =>
-          response.isSuccess() ? response.value.data : undefined
+          response.isSuccess() ? response.value.data : undefined,
         ),
-        takeUntil(this.stop$)
+        takeUntil(this.stop$),
       );
   }
 
   searchSalesOrders(params: Record<string, string>) {
     return this.apiService
-      .get<ResponseList<SalesOrder>>(
-        ENDPOINTS.salesOrder.searchSalesOrder,
-        params
-      )
+      .get<
+        ResponseList<SalesOrder>
+      >(ENDPOINTS.salesOrder.searchSalesOrder, params)
       .pipe(
         map((response) =>
-          response.isSuccess() ? response.value.data : undefined
+          response.isSuccess() ? response.value.data : undefined,
         ),
-        takeUntil(this.stop$)
+        takeUntil(this.stop$),
       );
   }
 

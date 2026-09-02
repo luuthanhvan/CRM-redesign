@@ -3,7 +3,7 @@ const LocalStrategy = require("passport-local");
 const User = require("../models/User");
 const { comparePwds } = require("./bcrypt");
 const logger = require("./winston");
-const { CONFIG } = require("../ultils/constants");
+const { CONFIG } = require("../constants/CommonConstants");
 
 const localLogin = new LocalStrategy(async (username, password, done) => {
   logger.info(CONFIG.PASSPORT.VERIFYING_USER);

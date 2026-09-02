@@ -3,63 +3,68 @@ const apiResponse = require("../ultils/apiResponse");
 const _ = require("lodash");
 const logger = require("../configs/winston");
 const { hashingPwd } = require("../configs/bcrypt");
-const { RESPONSE_MESSAGE } = require("../ultils/constants");
+const { USER_RESPONSE_MESSAGE } = require("../constants/UserConstants");
+
 class UserController {
   createNewUser(req, res) {
     try {
-      logger.info(RESPONSE_MESSAGE.CREATING_NEW_USER);
+      logger.info(USER_RESPONSE_MESSAGE.CREATING_NEW_USER);
       hashingPwd(req.body.password).then(async (result) => {
         const user = new User({
           ...req.body,
           password: result,
         });
         user.save().then(() => {
-          logger.info(RESPONSE_MESSAGE.CREATING_NEW_USER_SUCCESS);
+          logger.info(USER_RESPONSE_MESSAGE.CREATING_NEW_USER_SUCCESS);
           return apiResponse.successResponse(
             res,
-            RESPONSE_MESSAGE.CREATING_NEW_USER_SUCCESS
+            USER_RESPONSE_MESSAGE.CREATING_NEW_USER_SUCCESS,
           );
         });
       });
     } catch (err) {
-      logger.error(`${RESPONSE_MESSAGE.CREATING_NEW_USER_ERROR} ${err}`);
+      logger.error(`${USER_RESPONSE_MESSAGE.CREATING_NEW_USER_ERROR} ${err}`);
       return apiResponse.ErrorResponse(res, err);
     }
   }
 
   getListOfUsers(req, res) {
     try {
-      logger.info(RESPONSE_MESSAGE.FETCHING_LIST_OF_USERS);
+      logger.info(USER_RESPONSE_MESSAGE.FETCHING_LIST_OF_USERS);
       const query = req.isAdmin ? {} : { _id: req.userId };
       User.find(query, "-username -password").then((data) => {
-        logger.info(RESPONSE_MESSAGE.FETCHING_LIST_OF_USERS_SUCCESS);
+        logger.info(USER_RESPONSE_MESSAGE.FETCHING_LIST_OF_USERS_SUCCESS);
         return apiResponse.successResponseWithData(
           res,
-          RESPONSE_MESSAGE.FETCHING_LIST_OF_USERS_SUCCESS,
-          data
+          USER_RESPONSE_MESSAGE.FETCHING_LIST_OF_USERS_SUCCESS,
+          data,
         );
       });
     } catch (err) {
-      logger.error(`${RESPONSE_MESSAGE.FETCHING_LIST_OF_USERS_ERROR} ${err}`);
+      logger.error(
+        `${USER_RESPONSE_MESSAGE.FETCHING_LIST_OF_USERS_ERROR} ${err}`,
+      );
       return apiResponse.ErrorResponse(res, err);
     }
   }
 
   getListOfNames(req, res) {
     try {
-      logger.info(RESPONSE_MESSAGE.FETCHING_LIST_OF_NAMES_USERS);
+      logger.info(USER_RESPONSE_MESSAGE.FETCHING_LIST_OF_NAMES_USERS);
       const query = req.isAdmin ? {} : { _id: req.userId };
       User.find(query, "-username -password").then((data) => {
-        logger.info(RESPONSE_MESSAGE.FETCHING_LIST_OF_NAMES_USERS_SUCCESS);
+        logger.info(USER_RESPONSE_MESSAGE.FETCHING_LIST_OF_NAMES_USERS_SUCCESS);
         const names = data.length > 0 ? _.map(data, _.property("name")) : [];
         return apiResponse.successResponseWithData(
           res,
-          RESPONSE_MESSAGE.FETCHING_LIST_OF_NAMES_USERS_SUCCESS,
-          names
+          USER_RESPONSE_MESSAGE.FETCHING_LIST_OF_NAMES_USERS_SUCCESS,
+          names,
         );
       });
     } catch (err) {
-      logger.error(`${RESPONSE_MESSAGE.FETCHING_LIST_OF_USERS_ERROR} ${err}`);
+      logger.error(
+        `${USER_RESPONSE_MESSAGE.FETCHING_LIST_OF_USERS_ERROR} ${err}`,
+      );
       return apiResponse.ErrorResponse(res, err);
     }
   }
@@ -67,76 +72,78 @@ class UserController {
   getUser(req, res) {
     try {
       const userId = req.params.id;
-      logger.info(RESPONSE_MESSAGE.FETCHING_USER_BY_ID);
+      logger.info(USER_RESPONSE_MESSAGE.FETCHING_USER_BY_ID);
       User.findOne({ _id: userId }, "-password").then((data) => {
-        logger.info(RESPONSE_MESSAGE.FETCHING_USER_BY_ID_SUCCESS);
+        logger.info(USER_RESPONSE_MESSAGE.FETCHING_USER_BY_ID_SUCCESS);
         return apiResponse.successResponseWithData(
           res,
-          RESPONSE_MESSAGE.FETCHING_USER_BY_ID_SUCCESS,
-          data
+          USER_RESPONSE_MESSAGE.FETCHING_USER_BY_ID_SUCCESS,
+          data,
         );
       });
     } catch (err) {
-      logger.error(`${RESPONSE_MESSAGE.FETCHING_USER_BY_ID_ERROR} ${err}`);
+      logger.error(`${USER_RESPONSE_MESSAGE.FETCHING_USER_BY_ID_ERROR} ${err}`);
       return apiResponse.ErrorResponse(res, err);
     }
   }
 
   userProfile(req, res) {
     try {
-      logger.info(RESPONSE_MESSAGE.FETCHING_USER_INFO);
+      logger.info(USER_RESPONSE_MESSAGE.FETCHING_USER_INFO);
       const userId = req._id;
       User.findOne({ _id: userId }, "-username -password").then((data) => {
-        logger.info(RESPONSE_MESSAGE.FETCHING_USER_INFO_SUCCESS);
+        logger.info(USER_RESPONSE_MESSAGE.FETCHING_USER_INFO_SUCCESS);
         return apiResponse.successResponseWithData(
           res,
-          RESPONSE_MESSAGE.FETCHING_USER_INFO_SUCCESS,
-          data
+          USER_RESPONSE_MESSAGE.FETCHING_USER_INFO_SUCCESS,
+          data,
         );
       });
     } catch (err) {
-      logger.info(`${RESPONSE_MESSAGE.FETCHING_USER_INFO_ERROR} ${err}`);
+      logger.info(`${USER_RESPONSE_MESSAGE.FETCHING_USER_INFO_ERROR} ${err}`);
       return apiResponse.ErrorResponse(res, err);
     }
   }
 
   updateUser(req, res) {
     try {
-      logger.info(RESPONSE_MESSAGE.UPDATING_USER);
+      logger.info(USER_RESPONSE_MESSAGE.UPDATING_USER);
       let userId = req.params.id;
       let userInfo = req.body;
       User.updateOne({ _id: userId }, userInfo).then(() => {
-        logger.info(RESPONSE_MESSAGE.UPDATING_USER_SUCCESS);
+        logger.info(USER_RESPONSE_MESSAGE.UPDATING_USER_SUCCESS);
         return apiResponse.successResponse(
           res,
-          RESPONSE_MESSAGE.UPDATING_USER_SUCCESS
+          USER_RESPONSE_MESSAGE.UPDATING_USER_SUCCESS,
         );
       });
     } catch (err) {
-      logger.info(`${RESPONSE_MESSAGE.UPDATING_USER_ERROR} ${err}`);
+      logger.info(`${USER_RESPONSE_MESSAGE.UPDATING_USER_ERROR} ${err}`);
       return apiResponse.ErrorResponse(res, err);
     }
   }
 
   changePassword(req, res) {
     try {
-      logger.info(RESPONSE_MESSAGE.CHANGING_USER_PASSWORD);
+      logger.info(USER_RESPONSE_MESSAGE.CHANGING_USER_PASSWORD);
       let userId = req.params.id,
         newPass = req.body.newPass;
-      
+
       hashingPwd(newPass).then(async (hashedPass) => {
         User.findByIdAndUpdate({ _id: userId }, { password: hashedPass }).then(
-        () => {
-          logger.info(RESPONSE_MESSAGE.CHANGING_USER_PASSWORD_SUCCESS);
-          return apiResponse.successResponse(
-            res,
-            RESPONSE_MESSAGE.CHANGING_USER_PASSWORD_SUCCESS
-          );
-        }
-      );
+          () => {
+            logger.info(USER_RESPONSE_MESSAGE.CHANGING_USER_PASSWORD_SUCCESS);
+            return apiResponse.successResponse(
+              res,
+              USER_RESPONSE_MESSAGE.CHANGING_USER_PASSWORD_SUCCESS,
+            );
+          },
+        );
       });
     } catch (err) {
-      logger.info(`${RESPONSE_MESSAGE.CHANGING_USER_PASSWORD_ERROR} ${err}`);
+      logger.info(
+        `${USER_RESPONSE_MESSAGE.CHANGING_USER_PASSWORD_ERROR} ${err}`,
+      );
       return apiResponse.ErrorResponse(res, err);
     }
   }

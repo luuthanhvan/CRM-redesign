@@ -45,6 +45,6 @@ export class DialogComponent implements OnInit {
 
   onClose() {
     this.sendingSubmitSignal.emit(false);
-    this.dialogRef.close();
+    this.dialogRef.close('cancel');
   }
 }

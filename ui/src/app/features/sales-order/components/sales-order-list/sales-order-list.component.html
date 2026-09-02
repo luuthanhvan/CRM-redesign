@@ -25,7 +25,7 @@
             searchText.value !== '' ? ('shared.clear' | translate) : ''
           "
           [class.active]="searchText.value !== ''"
-          (click)="resetData()"
+          (click)="resetFilterData(); loadData()"
         ></fa-icon>
       </mat-form-field>
     </div>
@@ -102,7 +102,7 @@
             )
           "
         >
-          {{ element.subject }}
+          {{ element.subject || ("shared.missingValue" | translate) }}
         </td>
       </ng-container>
 
@@ -111,7 +111,7 @@
           {{ "salesOrder.table.contactName" | translate }}
         </th>
         <td class="text-center" mat-cell *matCellDef="let element">
-          {{ element.contactName }}
+          {{ element.contactName || ("shared.missingValue" | translate) }}
         </td>
       </ng-container>
 
@@ -120,12 +120,16 @@
           {{ "salesOrder.table.status" | translate }}
         </th>
         <td class="text-center" mat-cell *matCellDef="let element">
-          <div
-            class="badge rounded-pill"
-            [ngClass]="salesOrderService.getStatusBadgeColor(element.status)"
-          >
-            <span>{{ element.status }}</span>
-          </div>
+          @if (element.status) {
+            <div
+              class="badge rounded-pill"
+              [ngClass]="salesOrderService.getStatusBadgeColor(element.status)"
+            >
+              <span>{{ element.status }}</span>
+            </div>
+          } @else {
+            ("shared.missingValue" | translate)
+          }
         </td>
       </ng-container>
 
@@ -134,7 +138,11 @@
           {{ "salesOrder.table.total" | translate }}
         </th>
         <td class="text-center" mat-cell *matCellDef="let element">
-          $ {{ element.total | number: "1.0-2" }}
+          @if (element.total) {
+            $ {{ element.total | number: "1.0-2" }}
+          } @else {
+            ("shared.missingValue" | translate)
+          }
         </td>
       </ng-container>
 
@@ -143,7 +151,7 @@
           {{ "salesOrder.table.assignedTo" | translate }}
         </th>
         <td class="text-center" mat-cell *matCellDef="let element">
-          {{ element.assignedTo }}
+          {{ element.assignedTo || ("shared.missingValue" | translate) }}
         </td>
       </ng-container>
 
@@ -174,18 +182,21 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
-    <app-no-data-found
-      *ngIf="totalRecords === 0"
-      [id]="SALES_ORDER_ID.SALES_ORDER_LIST_NOT_FOUND"
-    ></app-no-data-found>
+    @if (totalRecords === 0) {
+      <app-no-data-found
+        [id]="SALES_ORDER_ID.SALES_ORDER_LIST_NOT_FOUND"
+      ></app-no-data-found>
+    }
   </div>
-  <div [hidden]="totalRecords === 0">
+  @if (totalRecords > 10) {
     <mat-paginator
       [id]="SALES_ORDER_ID.SALES_ORDER_LIST_PAGINATION"
       #salesOrderPaginator
       [length]="totalRecords"
-      [pageSize]="5"
-      [pageSizeOptions]="[5, 10, 20, 30, 40, 50]"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="[10, 20, 30, 40, 50]"
+      (page)="onPageChange($event)"
     ></mat-paginator>
-  </div>
+  }
 </div>

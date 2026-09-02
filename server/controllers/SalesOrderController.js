@@ -2,45 +2,55 @@ const SalesOrder = require("../models/SalesOrder");
 const { mutipleMongooseToObject } = require("../ultils/mongoose");
 const apiResponse = require("../ultils/apiResponse");
 const logger = require("../configs/winston");
-const { RESPONSE_MESSAGE } = require("../ultils/constants");
+const {
+  SALES_ORDER_RESPONSE_MESSAGE,
+} = require("../constants/SalesOrderConstants");
 const salesOrderService = require("../services/SalesOrderService");
 
 class SalesOrderController {
   storeSalesOrder(req, res) {
     try {
-      logger.info(RESPONSE_MESSAGE.CREATING_NEW_SALES_ORDER);
+      logger.info(SALES_ORDER_RESPONSE_MESSAGE.CREATING_NEW_SALES_ORDER);
       const saleOrder = new SalesOrder(req.body);
+
       saleOrder.save().then(() => {
-        logger.info(RESPONSE_MESSAGE.CREATING_NEW_SALES_ORDER_SUCCESS);
+        logger.info(
+          SALES_ORDER_RESPONSE_MESSAGE.CREATING_NEW_SALES_ORDER_SUCCESS,
+        );
         return apiResponse.successResponse(
           res,
-          RESPONSE_MESSAGE.CREATING_NEW_SALES_ORDER_SUCCESS,
+          SALES_ORDER_RESPONSE_MESSAGE.CREATING_NEW_SALES_ORDER_SUCCESS,
         );
       });
     } catch (err) {
-      logger.error(`${RESPONSE_MESSAGE.CREATING_NEW_SALES_ORDER_ERROR} ${err}`);
+      logger.error(
+        `${SALES_ORDER_RESPONSE_MESSAGE.CREATING_NEW_SALES_ORDER_ERROR} ${err}`,
+      );
       return apiResponse.ErrorResponse(res, err);
     }
   }
 
   getListOfSalesOrders(req, res) {
     try {
-      logger.info(RESPONSE_MESSAGE.FETCHING_LIST_OF_SALES_ORDER);
-      const isAdmin = req.isAdmin,
-        name = req.name;
-      const query = isAdmin ? {} : { assignedTo: name };
-      SalesOrder.find(query).then((data) => {
-        const resData = data.length > 0 ? mutipleMongooseToObject(data) : [];
-        logger.info(RESPONSE_MESSAGE.FETCHING_LIST_OF_SALES_ORDER_SUCCESS);
+      logger.info(SALES_ORDER_RESPONSE_MESSAGE.FETCHING_LIST_OF_SALES_ORDER);
+      const pipeline = salesOrderService.buildSalesOrdersPipeline(req);
+
+      SalesOrder.aggregate(pipeline).then((aggregateResults) => {
+        logger.info(
+          SALES_ORDER_RESPONSE_MESSAGE.FETCHING_LIST_OF_SALES_ORDER_SUCCESS,
+        );
+        const responseData =
+          salesOrderService.normalizeSalesOrdersAggregation(aggregateResults);
+
         return apiResponse.successResponseWithData(
           res,
-          RESPONSE_MESSAGE.FETCHING_LIST_OF_SALES_ORDER_SUCCESS,
-          resData,
+          SALES_ORDER_RESPONSE_MESSAGE.FETCHING_LIST_OF_SALES_ORDER_SUCCESS,
+          responseData,
         );
       });
     } catch (err) {
       logger.error(
-        `${RESPONSE_MESSAGE.FETCHING_LIST_OF_SALES_ORDER_ERROR} ${err}`,
+        `${SALES_ORDER_RESPONSE_MESSAGE.FETCHING_LIST_OF_SALES_ORDER_ERROR} ${err}`,
       );
       return apiResponse.ErrorResponse(res, err);
     }
@@ -48,71 +58,86 @@ class SalesOrderController {
 
   getSalesOrder(req, res) {
     try {
-      logger.info(RESPONSE_MESSAGE.FETCHING_SALES_ORDER);
-      const saleOrderId = req.params.id;
-      SalesOrder.findOne({ _id: saleOrderId }).then((data) => {
-        logger.info(RESPONSE_MESSAGE.FETCHING_SALES_ORDER_SUCCESS);
+      logger.info(SALES_ORDER_RESPONSE_MESSAGE.FETCHING_SALES_ORDER);
+      const pipeline = salesOrderService.buildSalesOrdersPipeline(req);
+
+      SalesOrder.aggregate(pipeline).then((aggregateResults) => {
+        logger.info(SALES_ORDER_RESPONSE_MESSAGE.FETCHING_SALES_ORDER_SUCCESS);
+        const responseData =
+          salesOrderService.normalizeSalesOrdersAggregation(aggregateResults);
+
         return apiResponse.successResponseWithData(
           res,
-          RESPONSE_MESSAGE.FETCHING_SALES_ORDER_SUCCESS,
-          data,
+          SALES_ORDER_RESPONSE_MESSAGE.FETCHING_SALES_ORDER_SUCCESS,
+          responseData.salesOrders[0],
         );
       });
     } catch (err) {
-      logger.error(`${RESPONSE_MESSAGE.FETCHING_SALES_ORDER_ERROR} ${err}`);
+      logger.error(
+        `${SALES_ORDER_RESPONSE_MESSAGE.FETCHING_SALES_ORDER_ERROR} ${err}`,
+      );
       return apiResponse.ErrorResponse(res, err);
     }
   }
 
   updateSalesOrder(req, res) {
     try {
-      logger.info(RESPONSE_MESSAGE.UPDATING_SALES_ORDER);
+      logger.info(SALES_ORDER_RESPONSE_MESSAGE.UPDATING_SALES_ORDER);
       const saleOrderId = req.params.id;
       const saleOrderInfo = req.body;
+
       SalesOrder.updateOne({ _id: saleOrderId }, saleOrderInfo).then(() => {
-        logger.info(RESPONSE_MESSAGE.UPDATING_SALES_ORDER_SUCCESS);
+        logger.info(SALES_ORDER_RESPONSE_MESSAGE.UPDATING_SALES_ORDER_SUCCESS);
         return apiResponse.successResponse(
           res,
-          RESPONSE_MESSAGE.UPDATING_SALES_ORDER_SUCCESS,
+          SALES_ORDER_RESPONSE_MESSAGE.UPDATING_SALES_ORDER_SUCCESS,
         );
       });
     } catch (err) {
-      logger.error(`${RESPONSE_MESSAGE.UPDATING_SALES_ORDER_ERROR} ${err}`);
+      logger.error(
+        `${SALES_ORDER_RESPONSE_MESSAGE.UPDATING_SALES_ORDER_ERROR} ${err}`,
+      );
       return apiResponse.ErrorResponse(res, err);
     }
   }
 
   deleteSalesOrder(req, res) {
     try {
-      logger.info(RESPONSE_MESSAGE.DELETING_SALES_ORDER);
+      logger.info(SALES_ORDER_RESPONSE_MESSAGE.DELETING_SALES_ORDER);
       const saleOrderId = req.params.id;
+
       SalesOrder.deleteOne({ _id: saleOrderId }).then(() => {
-        logger.info(RESPONSE_MESSAGE.DELETING_SALES_ORDER_SUCCESS);
+        logger.info(SALES_ORDER_RESPONSE_MESSAGE.DELETING_SALES_ORDER_SUCCESS);
         return apiResponse.successResponse(
           res,
-          RESPONSE_MESSAGE.DELETING_SALES_ORDER_SUCCESS,
+          SALES_ORDER_RESPONSE_MESSAGE.DELETING_SALES_ORDER_SUCCESS,
         );
       });
     } catch (err) {
-      logger.error(`${RESPONSE_MESSAGE.DELETING_SALES_ORDER_ERROR} ${err}`);
+      logger.error(
+        `${SALES_ORDER_RESPONSE_MESSAGE.DELETING_SALES_ORDER_ERROR} ${err}`,
+      );
       return apiResponse.ErrorResponse(res, err);
     }
   }
 
   deleteMultiSalesOrders(req, res) {
     try {
-      logger.info(RESPONSE_MESSAGE.DELETING_LIST_OF_SALES_ORDERS);
+      logger.info(SALES_ORDER_RESPONSE_MESSAGE.DELETING_LIST_OF_SALES_ORDERS);
       const salesOrderIds = req.body;
+
       SalesOrder.deleteMany({ _id: { $in: salesOrderIds } }).then(() => {
-        logger.info(RESPONSE_MESSAGE.DELETING_LIST_OF_SALES_ORDERS_SUCCESS);
+        logger.info(
+          SALES_ORDER_RESPONSE_MESSAGE.DELETING_LIST_OF_SALES_ORDERS_SUCCESS,
+        );
         return apiResponse.successResponse(
           res,
-          RESPONSE_MESSAGE.DELETING_LIST_OF_SALES_ORDERS_SUCCESS,
+          SALES_ORDER_RESPONSE_MESSAGE.DELETING_LIST_OF_SALES_ORDERS_SUCCESS,
         );
       });
     } catch (err) {
       logger.error(
-        `${RESPONSE_MESSAGE.DELETING_LIST_OF_SALES_ORDERS_ERROR} ${err}`,
+        `${SALES_ORDER_RESPONSE_MESSAGE.DELETING_LIST_OF_SALES_ORDERS_ERROR} ${err}`,
       );
       return apiResponse.ErrorResponse(res, err);
     }
@@ -120,68 +145,53 @@ class SalesOrderController {
 
   findSalesOrders(req, res) {
     try {
-      logger.info(RESPONSE_MESSAGE.FINDING_SALES_ORDER);
-      const query = salesOrderService.getSalesOrderSearchQuery(req);
-      SalesOrder.find(query).then((data) => {
-        logger.info(RESPONSE_MESSAGE.FINDING_SALES_ORDER_SUCCESS);
+      logger.info(SALES_ORDER_RESPONSE_MESSAGE.FINDING_SALES_ORDER);
+      const pipeline = salesOrderService.buildSalesOrdersPipeline(req);
+
+      SalesOrder.aggregate(pipeline).then((aggregateResults) => {
+        logger.info(SALES_ORDER_RESPONSE_MESSAGE.FINDING_SALES_ORDER_SUCCESS);
+        const responseData =
+          salesOrderService.normalizeSalesOrdersAggregation(aggregateResults);
+
         return apiResponse.successResponseWithData(
           res,
-          RESPONSE_MESSAGE.FINDING_SALES_ORDER_SUCCESS,
-          data,
+          SALES_ORDER_RESPONSE_MESSAGE.FINDING_SALES_ORDER_SUCCESS,
+          responseData,
         );
       });
     } catch (err) {
-      logger.error(`${RESPONSE_MESSAGE.FINDING_SALES_ORDER_ERROR} ${err}`);
+      logger.error(
+        `${SALES_ORDER_RESPONSE_MESSAGE.FINDING_SALES_ORDER_ERROR} ${err}`,
+      );
       return apiResponse.ErrorResponse(res, err);
     }
   }
 
   countNoSalesOrdersByStatus(req, res) {
     try {
-      logger.info(RESPONSE_MESSAGE.COUNTING_NO_SALES_ORDERS_BY_STATUS);
-      SalesOrder.aggregate([
-        {
-          $facet: {
-            salesOrderCount: [
-              {
-                $group: {
-                  _id: "$status",
-                  count: { $sum: 1 },
-                },
-              },
-            ],
-            summary: [
-              {
-                $group: { _id: null, totalSum: { $sum: { $toInt: "$total" } } },
-              },
-            ],
-          },
-        },
-      ]).then((data) => {
+      logger.info(
+        SALES_ORDER_RESPONSE_MESSAGE.COUNTING_NO_SALES_ORDERS_BY_STATUS,
+      );
+      const pipeline = salesOrderService.buildSalesOrderSummaryPipeline();
+
+      SalesOrder.aggregate(pipeline).then((aggregateResults) => {
         logger.info(
-          RESPONSE_MESSAGE.COUNTING_NO_SALES_ORDERS_BY_STATUS_SUCCESS,
+          SALES_ORDER_RESPONSE_MESSAGE.COUNTING_NO_SALES_ORDERS_BY_STATUS_SUCCESS,
         );
-        const total = data[0].salesOrderCount.reduce(
-          (sum, item) => sum + item.count,
-          0,
-        );
-        const responseData = {
-          salesOrderCount: data[0].salesOrderCount,
-          totalSalesOrders: total,
-          totalRevenue:
-            data[0].summary[0] && data[0].summary[0].totalSum
-              ? data[0].summary[0].totalSum
-              : 0,
-        };
+        const responseData =
+          salesOrderService.normalizeSalesOrderSummaryAggregation(
+            aggregateResults,
+          );
+
         return apiResponse.successResponseWithData(
           res,
-          RESPONSE_MESSAGE.COUNTING_NO_SALES_ORDERS_BY_STATUS_SUCCESS,
+          SALES_ORDER_RESPONSE_MESSAGE.COUNTING_NO_SALES_ORDERS_BY_STATUS_SUCCESS,
           responseData,
         );
       });
     } catch (err) {
       logger.error(
-        `${RESPONSE_MESSAGE.COUNTING_NO_SALES_ORDERS_BY_STATUS_ERROR} ${err}`,
+        `${SALES_ORDER_RESPONSE_MESSAGE.COUNTING_NO_SALES_ORDERS_BY_STATUS_ERROR} ${err}`,
       );
       return apiResponse.ErrorResponse(res, err);
     }

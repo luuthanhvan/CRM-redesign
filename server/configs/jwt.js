@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config({ path: "../.env" });
 const logger = require('./winston');
-const { CONFIG } = require('../ultils/constants');
+const { CONFIG } = require('../constants/CommonConstants');
 
 module.exports.verifyJwtToken = (req, res, next) => {
   logger.info(CONFIG.JWT.VERIFYING_TOKEN);

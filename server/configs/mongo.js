@@ -2,7 +2,7 @@ const mg = require("mongoose");
 const dotenv = require("dotenv");
 dotenv.config({ path: "../.env" });
 const logger = require('./winston');
-const { CONFIG } = require('../ultils/constants');
+const { CONFIG } = require('../constants/CommonConstants');
 
 module.exports.mongo = async () => {
   try {

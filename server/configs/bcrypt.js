@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
 dotenv.config({ path: "../.env" });
 const logger = require("./winston");
-const { CONFIG } = require("../ultils/constants");
+const { CONFIG } = require("../constants/CommonConstants");
 
 const saltRounds = Number(process.env.SALT_ROUNDS);
 

@@ -4,7 +4,7 @@ const sampleUsers = require("../mock-json/sample-users.json");
 const User = require("../models/User");
 const { hashingPwd } = require("../configs/bcrypt");
 const logger = require("../configs/winston");
-const { DATABASE } = require("../ultils/constants");
+const { DATABASE } = require("../constants/CommonConstants");
 
 db.mongo();
 

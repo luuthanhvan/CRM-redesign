@@ -32,10 +32,12 @@
               {{ "salesOrder.table.contactName" | translate }}
             </span>
             <span class="card-tile-bottom">
-              {{ salesOrder.contactName || ("shared.missingValue" | translate) }}
+              {{
+                salesOrder.contactName || ("shared.missingValue" | translate)
+              }}
             </span>
           </div>
-  
+
           <div class="card-tile">
             <span class="card-tile-top">
               {{ "salesOrder.table.status" | translate }}
@@ -55,7 +57,7 @@
               }
             </span>
           </div>
-  
+
           <div class="card-tile blue">
             <span class="card-tile-top">
               {{ "salesOrder.table.total" | translate }}
@@ -64,7 +66,7 @@
               $ {{ salesOrder.total || 0 | number: "1.0-2" }}
             </span>
           </div>
-  
+
           <div class="card-tile teal">
             <span class="card-tile-top">
               {{ "salesOrder.table.assignedTo" | translate }}
@@ -73,7 +75,7 @@
               {{ salesOrder.assignedTo || ("shared.missingValue" | translate) }}
             </span>
           </div>
-  
+
           <div class="card-tile maroon">
             <span class="card-tile-top">
               {{ "salesOrder.table.creator" | translate }}
@@ -82,26 +84,26 @@
               {{ salesOrder.creator || ("shared.missingValue" | translate) }}
             </span>
           </div>
-  
+
           <div class="card-tile navy">
             <span class="card-tile-top">
               {{ "salesOrder.table.createdTime" | translate }}
             </span>
             <span class="card-tile-bottom">
               {{
-                (salesOrder.createdTime | date) ||
+                (salesOrder.createdTime | date: "MMM dd, yyyy") ||
                   ("shared.missingValue" | translate)
               }}
             </span>
           </div>
-  
+
           <div class="card-tile sage">
             <span class="card-tile-top">
               {{ "salesOrder.table.updatedTime" | translate }}
             </span>
             <span class="card-tile-bottom">
               {{
-                (salesOrder.updatedTime | date) ||
+                (salesOrder.updatedTime | date: "MMM dd, yyyy") ||
                   ("shared.missingValue" | translate)
               }}
             </span>

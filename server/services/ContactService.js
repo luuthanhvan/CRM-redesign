@@ -108,12 +108,33 @@ class ContactService {
     return pipeline;
   }
 
-  normalizeAggregateResults(result) {
+  normalizeContactsAggregation(result) {
     // facet always returns an array with one object
     const facetResult = result[0] || {}; // unwraps the single object returned by $facet
     const contacts = facetResult.paginatedResults || []; // the actual list of contacts
     const totalRecords = facetResult.totalRecords?.[0]?.count || 0; // extracts the count safely
     return { contacts, totalRecords };
+  }
+
+  buildContactSummaryPipeline() {
+    const pipeline = [
+      {
+        $group: {
+          _id: "$leadSrc",
+          count: { $sum: 1 },
+        },
+      },
+    ];
+
+    return pipeline;
+  }
+
+  normalizeContactSummaryAggregation(result) {
+    const total = result.reduce((sum, item) => sum + item.count, 0);
+    return {
+      contactCount: result,
+      totalContacts: total,
+    };
   }
 }
 

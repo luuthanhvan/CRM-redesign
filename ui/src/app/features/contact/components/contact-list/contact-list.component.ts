@@ -127,13 +127,15 @@ export class ContactListComponent implements OnInit {
     this.dataSource = data['contacts'];
   }
 
-  resetData() {
-    this.pageIndex = 0;
-    this.pageSize = 10;
+  resetFilterData() {
     if (this.searchText.value !== '') {
       this.searchText = new FormControl('');
-      this.loadData();
     }
+  }
+
+  resetPagination() {
+    this.pageIndex = 0;
+    this.pageSize = 10;
   }
 
   openFormDialog(action: string, contactId?: string) {
@@ -149,6 +151,8 @@ export class ContactListComponent implements OnInit {
     });
     formDialogRef.afterClosed().subscribe((result) => {
       if (result !== 'cancel') {
+        this.resetFilterData();
+        this.resetPagination();
         this.loadData();
       }
     });
@@ -186,7 +190,11 @@ export class ContactListComponent implements OnInit {
       },
     );
     confirmDialogRef.afterClosed().subscribe((result) => {
-      this.loadData();
+      if (result !== 'cancel') {
+        this.resetFilterData();
+        this.resetPagination();
+        this.loadData();
+      }
     });
   }
 
@@ -222,8 +230,12 @@ export class ContactListComponent implements OnInit {
       },
     );
     confirmDialogRef.afterClosed().subscribe((result) => {
-      this.contactIdsChecked = [];
-      this.loadData();
+      if (result !== 'cancel') {
+        this.contactIdsChecked = [];
+        this.resetFilterData();
+        this.resetPagination();
+        this.loadData();
+      }
     });
   }
 

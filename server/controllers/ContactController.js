@@ -14,6 +14,7 @@ class ContactController {
     try {
       logger.info(CONTACT_RESPONSE_MESSAGE.CREATING_NEW_CONTACT);
       const contacts = new Contacts(req.body);
+
       contacts.save().then(() => {
         logger.info(CONTACT_RESPONSE_MESSAGE.CREATING_NEW_CONTACT_SUCCESS);
         return apiResponse.successResponse(
@@ -37,7 +38,7 @@ class ContactController {
       Contacts.aggregate(pipeline).then((aggregateResults) => {
         logger.info(CONTACT_RESPONSE_MESSAGE.FETCHING_LIST_OF_CONTACTS_SUCCESS);
         const responseData =
-          contactService.normalizeAggregateResults(aggregateResults);
+          contactService.normalizeContactsAggregation(aggregateResults);
 
         return apiResponse.successResponseWithData(
           res,
@@ -57,6 +58,7 @@ class ContactController {
     try {
       logger.info(CONTACT_RESPONSE_MESSAGE.FETCHING_LIST_OF_CONTACT_NAMES);
       const query = req.isAdmin ? {} : { assignedTo: req.name };
+
       Contacts.find(query).then((data) => {
         logger.info(
           CONTACT_RESPONSE_MESSAGE.FETCHING_LIST_OF_CONTACT_NAMES_SUCCESS,
@@ -86,7 +88,7 @@ class ContactController {
       Contacts.aggregate(pipeline).then((aggregateResults) => {
         logger.info(CONTACT_RESPONSE_MESSAGE.FETCHING_CONTACT_SUCCESS);
         const responseData =
-          contactService.normalizeAggregateResults(aggregateResults);
+          contactService.normalizeContactsAggregation(aggregateResults);
 
         return apiResponse.successResponseWithData(
           res,
@@ -105,6 +107,7 @@ class ContactController {
       logger.info(CONTACT_RESPONSE_MESSAGE.UPDATING_CONTACT);
       let contactId = req.params.id;
       let contactInfo = req.body;
+
       Contacts.updateOne({ _id: contactId }, contactInfo).then(() => {
         logger.info(CONTACT_RESPONSE_MESSAGE.UPDATING_CONTACT_SUCCESS);
         return apiResponse.successResponse(
@@ -122,6 +125,7 @@ class ContactController {
     try {
       logger.info(CONTACT_RESPONSE_MESSAGE.DELETING_CONTACT);
       let contactId = req.params.id;
+
       Contacts.deleteOne({ _id: contactId }).then(() => {
         logger.info(CONTACT_RESPONSE_MESSAGE.DELETING_CONTACT_SUCCESS);
         return apiResponse.successResponse(
@@ -139,6 +143,7 @@ class ContactController {
     try {
       logger.info(CONTACT_RESPONSE_MESSAGE.DELETING_LIST_OF_CONTACTS);
       let contactIds = req.body;
+
       Contacts.deleteMany({ _id: { $in: contactIds } }).then(() => {
         logger.info(CONTACT_RESPONSE_MESSAGE.DELETING_LIST_OF_CONTACTS_SUCCESS);
         return apiResponse.successResponse(
@@ -162,7 +167,7 @@ class ContactController {
       Contacts.aggregate(pipeline).then((aggregateResults) => {
         logger.info(CONTACT_RESPONSE_MESSAGE.FINDING_CONTACT_SUCCESS);
         const responseData =
-          contactService.normalizeAggregateResults(aggregateResults);
+          contactService.normalizeContactsAggregation(aggregateResults);
 
         return apiResponse.successResponseWithData(
           res,
@@ -179,22 +184,15 @@ class ContactController {
   countNoContactsByLeadSrc(req, res) {
     try {
       logger.info(CONTACT_RESPONSE_MESSAGE.COUNTING_NO_CONTACTS_BY_LEAD_SRC);
-      Contacts.aggregate([
-        {
-          $group: {
-            _id: "$leadSrc",
-            count: { $sum: 1 },
-          },
-        },
-      ]).then((data) => {
+      const pipeline = contactService.buildContactSummaryPipeline();
+
+      Contacts.aggregate(pipeline).then((aggregateResults) => {
         logger.info(
           CONTACT_RESPONSE_MESSAGE.COUNTING_NO_CONTACTS_BY_LEAD_SRC_SUCCESS,
         );
-        const total = data.reduce((sum, item) => sum + item.count, 0);
-        const responseData = {
-          contactCount: data,
-          totalContacts: total,
-        };
+        const responseData =
+          contactService.normalizeContactSummaryAggregation(aggregateResults);
+
         return apiResponse.successResponseWithData(
           res,
           CONTACT_RESPONSE_MESSAGE.COUNTING_NO_CONTACTS_BY_LEAD_SRC_SUCCESS,
@@ -219,7 +217,7 @@ class ContactController {
           CONTACT_RESPONSE_MESSAGE.EXPORT_CONTACT_DETAILS_ALL_SUCCESS,
         );
         const responseData =
-          contactService.normalizeAggregateResults(aggregateResults);
+          contactService.normalizeContactsAggregation(aggregateResults);
         const fields = CONTACT_DETAILS_EXPORT_COLUMNS;
         const json2csvParser = new Parser({ fields });
         const csvData = json2csvParser.parse(responseData.contacts);
