@@ -31,19 +31,19 @@
               {{ contact.salutation || ("shared.missingValue" | translate) }}
             </span>
           </div>
-  
+
           <div class="card-tile orange">
             <span class="card-tile-top">
               {{ "contact.table.dob" | translate }}
             </span>
             <span class="card-tile-bottom">
               {{
-                (contact.dob | date: "mediumDate") ||
+                (contact.dob | date: "MMM dd, yyyy") ||
                   ("shared.missingValue" | translate)
               }}
             </span>
           </div>
-  
+
           <div class="card-tile maroon">
             <span class="card-tile-top">
               {{ "contact.table.phone" | translate }}
@@ -52,7 +52,7 @@
               {{ contact.mobilePhone || ("shared.missingValue" | translate) }}
             </span>
           </div>
-  
+
           <div class="card-tile blue">
             <span class="card-tile-top">
               {{ "contact.table.email" | translate }}
@@ -61,7 +61,7 @@
               {{ contact.email || ("shared.missingValue" | translate) }}
             </span>
           </div>
-  
+
           <div class="card-tile teal">
             <span class="card-tile-top">
               {{ "contact.table.organization" | translate }}
@@ -70,7 +70,7 @@
               {{ contact.organization || ("shared.missingValue" | translate) }}
             </span>
           </div>
-  
+
           <div class="card-tile">
             <span class="card-tile-top">
               {{ "contact.table.leadSrc" | translate }}
@@ -79,7 +79,9 @@
               @if (contact.leadSrc) {
                 <div
                   class="badge rounded-pill"
-                  [ngClass]="contactService.getLeadSrcBadgeColor(contact.leadSrc)"
+                  [ngClass]="
+                    contactService.getLeadSrcBadgeColor(contact.leadSrc)
+                  "
                 >
                   <span>{{ contact.leadSrc }}</span>
                 </div>
@@ -88,7 +90,7 @@
               }
             </span>
           </div>
-  
+
           <div class="card-tile green">
             <span class="card-tile-top">
               {{ "contact.table.creator" | translate }}
@@ -97,7 +99,7 @@
               {{ contact.creator || ("shared.missingValue" | translate) }}
             </span>
           </div>
-  
+
           <div class="card-tile pink">
             <span class="card-tile-top">
               {{ "contact.table.assignedTo" | translate }}
@@ -106,26 +108,26 @@
               {{ contact.assignedTo || ("shared.missingValue" | translate) }}
             </span>
           </div>
-  
+
           <div class="card-tile navy">
             <span class="card-tile-top">
               {{ "contact.table.createdTime" | translate }}
             </span>
             <span class="card-tile-bottom">
               {{
-                (contact.createdTime | date) ||
+                (contact.createdTime | date: "MMM dd, yyyy") ||
                   ("shared.missingValue" | translate)
               }}
             </span>
           </div>
-  
+
           <div class="card-tile sage">
             <span class="card-tile-top">
               {{ "contact.table.updatedTime" | translate }}
             </span>
             <span class="card-tile-bottom">
               {{
-                (contact.updatedTime | date) ||
+                (contact.updatedTime | date: "MMM dd, yyyy") ||
                   ("shared.missingValue" | translate)
               }}
             </span>

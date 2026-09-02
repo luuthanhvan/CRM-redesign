@@ -11,7 +11,7 @@ import {
 } from 'rxjs/operators';
 
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSelectChange } from '@angular/material/select';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -67,6 +67,9 @@ export class ContactListComponent implements OnInit {
   search$!: Observable<Contact[] | undefined>;
   currentUserInfo: Record<string, any>;
 
+  pageSize = 10;
+  pageIndex = 0;
+
   constructor() {
     const currentUserInfo = window.localStorage.getItem('currentUser');
     this.currentUserInfo = currentUserInfo && JSON.parse(currentUserInfo);
@@ -91,7 +94,7 @@ export class ContactListComponent implements OnInit {
       switchMap((contactName) =>
         contactName
           ? this.contactApi.searchContacts({
-              contactName,
+              ...(contactName !== '' && { contactName }),
               ...(this.selectedLeadSrc.length > 0 && {
                 leadSource: this.selectedLeadSrc.toString(),
               }),
@@ -100,27 +103,33 @@ export class ContactListComponent implements OnInit {
       ),
     );
 
-    combineLatest([this.contactApi.getListOfContacts(), this.search$])
+    const contactList$ = this.contactApi.getListOfContacts({
+      page: this.pageIndex + 1,
+      limit: this.pageSize,
+    });
+
+    combineLatest([contactList$, this.search$])
       .pipe(
         map(([contacts, searchResult]) => {
           const sourceData = searchResult || contacts;
           return sourceData;
         }),
       )
-      .subscribe((contactData) => {
-        if (contactData) {
-          this.setTableData(contactData);
+      .subscribe((responseData) => {
+        if (responseData) {
+          this.setTableData(responseData);
         }
       });
   }
 
-  setTableData(data: Contact[]) {
-    this.totalRecords = data.length;
-    this.dataSource = new MatTableDataSource(data);
-    this.dataSource.paginator = this.contactPaginator;
+  setTableData(data: Record<string, any>) {
+    this.totalRecords = data['totalRecords'];
+    this.dataSource = data['contacts'];
   }
 
   resetData() {
+    this.pageIndex = 0;
+    this.pageSize = 10;
     if (this.searchText.value !== '') {
       this.searchText = new FormControl('');
       this.loadData();
@@ -139,7 +148,9 @@ export class ContactListComponent implements OnInit {
       },
     });
     formDialogRef.afterClosed().subscribe((result) => {
-      this.loadData();
+      if (result !== 'cancel') {
+        this.loadData();
+      }
     });
   }
 
@@ -238,13 +249,21 @@ export class ContactListComponent implements OnInit {
         ...(this.searchText.value !== '' && {
           contactName: this.searchText.value,
         }),
-        leadSource: this.selectedLeadSrc.toString(),
+        ...(this.selectedLeadSrc.length > 0 && {
+          leadSource: this.selectedLeadSrc.toString(),
+        }),
       })
       .subscribe((contactData) => {
         if (contactData) {
           this.setTableData(contactData);
         }
       });
+  }
+
+  onPageChange(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadData();
   }
 
   onDownloadAllContacts() {

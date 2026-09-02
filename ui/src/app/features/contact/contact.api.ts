@@ -36,9 +36,9 @@ export class ContactApi {
       .get<ResponseList>(`${ENDPOINTS.contact.countContact}/${countBy}`)
       .pipe(
         map((response) =>
-          response.isSuccess() ? response.value.data : undefined
+          response.isSuccess() ? response.value.data : undefined,
         ),
-        takeUntil(this.stop$)
+        takeUntil(this.stop$),
       );
   }
 
@@ -61,25 +61,25 @@ export class ContactApi {
           headers: {
             skipLoading: 'true',
           },
-        }
+        },
       )
       .pipe(
         map((response) =>
-          response.isSuccess() ? response.value.data : undefined
+          response.isSuccess() ? response.value.data : undefined,
         ),
-        takeUntil(this.stop$)
+        takeUntil(this.stop$),
       );
   }
 
-  getListOfContacts() {
+  getListOfContacts(params: Record<string, any>) {
     return this.apiService
-      .get<ResponseList<Contact>>(ENDPOINTS.contact.contactList)
+      .get<ResponseList<Contact>>(ENDPOINTS.contact.contactList, params)
       .pipe(
         map((response) =>
-          response.isSuccess() ? response.value.data : undefined
+          response.isSuccess() ? response.value.data : undefined,
         ),
         takeUntil(this.stop$),
-        shareReplay()
+        shareReplay(),
       );
   }
 
@@ -92,13 +92,13 @@ export class ContactApi {
           headers: {
             skipLoading: 'true',
           },
-        }
+        },
       )
       .pipe(
         map((response) =>
-          response.isSuccess() ? response.value.data : undefined
+          response.isSuccess() ? response.value.data : undefined,
         ),
-        takeUntil(this.stop$)
+        takeUntil(this.stop$),
       );
   }
 
@@ -107,9 +107,9 @@ export class ContactApi {
       .get<ResponseList<Contact>>(ENDPOINTS.contact.searchContact, params)
       .pipe(
         map((response) =>
-          response.isSuccess() ? response.value.data : undefined
+          response.isSuccess() ? response.value.data : undefined,
         ),
-        takeUntil(this.stop$)
+        takeUntil(this.stop$),
       );
   }
 
@@ -120,6 +120,8 @@ export class ContactApi {
   }
 
   exportAllContacts() {
-    return this.http.get(ENDPOINTS.contact.exportAllContacts, { responseType: 'blob' });
+    return this.http.get(ENDPOINTS.contact.exportAllContacts, {
+      responseType: 'blob',
+    });
   }
 }

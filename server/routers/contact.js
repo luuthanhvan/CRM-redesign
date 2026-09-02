@@ -43,6 +43,7 @@ router.delete(
 router.get(
   "/export/all",
   jwtHelper.verifyJwtToken,
+  authController.verifyUser,
   contactController.exportAllContacts,
 );
 

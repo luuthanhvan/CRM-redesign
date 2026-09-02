@@ -168,4 +168,9 @@ export class ContactFormComponent implements OnInit {
         .subscribe();
     }
   }
+
+  onCancel() {
+    // Close the dialog and pass the data packet back
+    this.dialogRef.close('cancel');
+  }
 }

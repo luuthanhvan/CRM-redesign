@@ -120,9 +120,11 @@
           </h5>
           <mat-form-field appearance="outline" class="w-100">
             <mat-select formControlName="salutation">
-              <mat-option *ngFor="let salut of salutations" [value]="salut">{{
-                salut
-              }}</mat-option>
+              @for (salutation of salutations; track salutation) {
+                <mat-option [value]="salutation">
+                  {{ salutation }}
+                </mat-option>
+              }
             </mat-select>
             @if (contactForm.controls["salutation"].errors?.["required"]) {
               <mat-error>
@@ -139,9 +141,11 @@
           </h5>
           <mat-form-field appearance="outline" class="w-100">
             <mat-select formControlName="leadSrc">
-              <mat-option *ngFor="let src of leadSources" [value]="src">
-                {{ src }}
-              </mat-option>
+              @for (leadSrc of leadSources; track leadSrc) {
+                <mat-option [value]="leadSrc">
+                  {{ leadSrc }}
+                </mat-option>
+              }
             </mat-select>
             @if (contactForm.controls["leadSrc"].errors?.["required"]) {
               <mat-error>
@@ -153,28 +157,28 @@
       </div>
 
       <div class="row my-3">
-        <div class="col-6">
-          <h5>
-            {{ "contact.table.assignedTo" | translate }}
-            <span class="text-danger">*</span>
-          </h5>
-          <mat-form-field
-            *ngIf="assignedToUsers && assignedToUsers.length > 0"
-            appearance="outline"
-            class="w-100"
-          >
-            <mat-select formControlName="assignedTo">
-              <mat-option *ngFor="let user of assignedToUsers" [value]="user">
-                {{ user }}
-              </mat-option>
-            </mat-select>
-            @if (contactForm.controls["assignedTo"].errors?.["required"]) {
-              <mat-error>
-                {{ "shared.error.assignedToRequired" | translate }}
-              </mat-error>
-            }
-          </mat-form-field>
-        </div>
+        @if (assignedToUsers && assignedToUsers.length > 0) {
+          <div class="col-6">
+            <h5>
+              {{ "contact.table.assignedTo" | translate }}
+              <span class="text-danger">*</span>
+            </h5>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-select formControlName="assignedTo">
+                @for (user of assignedToUsers; track user) {
+                  <mat-option [value]="user">
+                    {{ user }}
+                  </mat-option>
+                }
+              </mat-select>
+              @if (contactForm.controls["assignedTo"].errors?.["required"]) {
+                <mat-error>
+                  {{ "shared.error.assignedToRequired" | translate }}
+                </mat-error>
+              }
+            </mat-form-field>
+          </div>
+        }
 
         <div class="col-6">
           <h5>
@@ -206,10 +210,10 @@
   <mat-dialog-actions align="end" class="card-actions">
     <button
       mat-button
-      mat-dialog-close
       class="btn-secondary"
       [disableRipple]="true"
       [id]="CONTACT_ID.BUTTON_CANCEL"
+      (click)="onCancel()"
     >
       {{ "shared.cancel" | translate }}
     </button>

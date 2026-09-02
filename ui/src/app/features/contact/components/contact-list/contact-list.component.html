@@ -29,10 +29,7 @@
         ></fa-icon>
       </mat-form-field>
     </div>
-    <div
-      class="float-end d-flex align-items-center gap-2"
-      *ngIf="currentUserInfo && currentUserInfo['isAdmin']"
-    >
+    <div class="float-end d-flex align-items-center gap-2">
       <mat-form-field class="form-filter">
         <mat-label>{{ "contact.filterByLeadSrc" | translate }}</mat-label>
         <mat-select
@@ -41,9 +38,9 @@
           (selectionChange)="onLeadSrcChange($event)"
         >
           @for (leadSrc of leadSourceList; track leadSrc) {
-            <mat-option [value]="leadSrc" [disabled]="totalRecords === 0">{{
-              leadSrc
-            }}</mat-option>
+            <mat-option [value]="leadSrc" [disabled]="totalRecords === 0">
+              {{ leadSrc }}
+            </mat-option>
           }
         </mat-select>
       </mat-form-field>
@@ -125,7 +122,7 @@
             })
           "
         >
-          {{ element.contactName }}
+          {{ element.contactName || ("shared.missingValue" | translate) }}
         </td>
       </ng-container>
 
@@ -134,7 +131,7 @@
           {{ "contact.table.salutation" | translate }}
         </th>
         <td class="text-center" mat-cell *matCellDef="let element">
-          {{ element.salutation }}
+          {{ element.salutation || ("shared.missingValue" | translate) }}
         </td>
       </ng-container>
 
@@ -143,7 +140,7 @@
           {{ "contact.table.organization" | translate }}
         </th>
         <td class="text-center" mat-cell *matCellDef="let element">
-          {{ element.organization }}
+          {{ element.organization || ("shared.missingValue" | translate) }}
         </td>
       </ng-container>
 
@@ -152,12 +149,16 @@
           {{ "contact.table.leadSrc" | translate }}
         </th>
         <td class="text-center" mat-cell *matCellDef="let element">
-          <div
-            class="badge rounded-pill"
-            [ngClass]="contactService.getLeadSrcBadgeColor(element.leadSrc)"
-          >
-            <span>{{ element.leadSrc }}</span>
-          </div>
+          @if (element.leadSrc) {
+            <div
+              class="badge rounded-pill"
+              [ngClass]="contactService.getLeadSrcBadgeColor(element.leadSrc)"
+            >
+              <span>{{ element.leadSrc }}</span>
+            </div>
+          } @else {
+            {{ "shared.missingValue" | translate }}
+          }
         </td>
       </ng-container>
 
@@ -166,7 +167,7 @@
           {{ "contact.table.phone" | translate }}
         </th>
         <td class="text-center" mat-cell *matCellDef="let element">
-          {{ element.mobilePhone }}
+          {{ element.mobilePhone || "shared.missingValue" | translate }}
         </td>
       </ng-container>
 
@@ -175,7 +176,7 @@
           {{ "contact.table.email" | translate }}
         </th>
         <td class="text-center" mat-cell *matCellDef="let element">
-          {{ element.email }}
+          {{ element.email || ("shared.missingValue" | translate) }}
         </td>
       </ng-container>
 
@@ -184,7 +185,7 @@
           {{ "contact.table.assignedTo" | translate }}
         </th>
         <td class="text-center" mat-cell *matCellDef="let element">
-          {{ element.assignedTo }}
+          {{ element.assignedTo || "shared.missingValue" | translate }}
         </td>
       </ng-container>
 
@@ -216,18 +217,21 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
-    <app-no-data-found
-      *ngIf="totalRecords === 0"
-      [panelId]="CONTACT_ID.CONTACT_LIST_NOT_FOUND"
-    ></app-no-data-found>
+    @if (totalRecords === 0) {
+      <app-no-data-found
+        [panelId]="CONTACT_ID.CONTACT_LIST_NOT_FOUND"
+      ></app-no-data-found>
+    }
   </div>
-  <div [hidden]="totalRecords === 0">
+  @if (totalRecords > 10) {
     <mat-paginator
       [id]="CONTACT_ID.CONTACT_LIST_PAGINATION"
       #contactPaginator
       [length]="totalRecords"
-      [pageSize]="5"
-      [pageSizeOptions]="[5, 10, 20, 30, 40, 50]"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="[10, 20, 30, 40, 50]"
+      (page)="onPageChange($event)"
     ></mat-paginator>
-  </div>
+  }
 </div>
